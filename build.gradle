@@ -1,0 +1,136 @@
+plugins {
+    alias(libs.plugins.idea)
+    alias(libs.plugins.java)
+    alias(libs.plugins.post.compile.weaving)
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'io.freefair.aspectj.post-compile-weaving'
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
+
+    group = "${rootProject.group}.${project.name}"
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(project.javaVersion.toInteger())
+        }
+        withJavadocJar()
+        withSourcesJar()
+    }
+
+    repositories {
+        maven {
+            url = 'https://gds.jfrog.io/artifactory/di-allowed-repos'
+        }
+    }
+
+    configurations {
+        mockitoAgent
+    }
+
+    configurations.configureEach {
+        resolutionStrategy {
+            force "org.aspectj:aspectjrt:${libs.versions.aspect.jrt.get()}"
+            force "org.aspectj:aspectjtools:${libs.versions.aspect.jrt.get()}"
+        }
+    }
+
+    dependencies {
+        mockitoAgent platform(libs.mockito.bom)
+        mockitoAgent(libs.mockito.core) {
+            transitive = false
+        }
+
+        aspect libs.bundles.lambda.powertools
+
+        implementation platform(libs.aws.sdk.bom)
+        implementation libs.aspectjrt
+
+        testImplementation platform(libs.junit.bom)
+        testImplementation platform(libs.mockito.bom)
+        testImplementation libs.bundles.junit
+        testImplementation libs.bundles.mockito
+
+        testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+    }
+
+    test {
+        useJUnitPlatform()
+        jvmArgs("-javaagent:${configurations.mockitoAgent.asPath}", "-Xshare:off")
+
+        testLogging {
+            events = ["passed", "skipped", "failed"]
+            showStandardStreams = false
+            showExceptions = true
+            exceptionFormat = "short"
+            displayGranularity = 2
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+
+                pom {
+                    name = project.name
+                    description = project.findProperty('description') ?: project.name
+                    url = 'https://github.com/govuk-one-login/ipv-cri-lime-shared'
+
+                    licenses {
+                        license {
+                            name = 'MIT License'
+                            url = 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'ipv-cri-lime'
+                            name = 'Lime'
+                            organization = 'Government Digital Service'
+                            organizationUrl = 'https://www.gov.uk/government/organisations/government-digital-service'
+                        }
+                    }
+
+                    scm {
+                        connection = 'scm:git:git://github.com/govuk-one-login/ipv-cri-lime-shared.git'
+                        developerConnection = 'scm:git:ssh://github.com/govuk-one-login/ipv-cri-lime-shared.git'
+                        url = 'https://github.com/govuk-one-login/ipv-cri-lime-shared'
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = 'OSSRH'
+                def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+                def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+                url = project.version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+                credentials {
+                    username = System.getenv('OSSRH_USERNAME') ?: ''
+                    password = System.getenv('OSSRH_PASSWORD') ?: ''
+                }
+            }
+        }
+    }
+
+    signing {
+        def signingKey = System.getenv('GPG_PRIVATE_KEY')
+        def signingPassword = System.getenv('GPG_PASSPHRASE')
+
+        if (signingKey && signingPassword) {
+            useInMemoryPgpKeys(signingKey, signingPassword)
+        }
+
+        sign publishing.publications.mavenJava
+    }
+
+    tasks.withType(Sign).configureEach {
+        onlyIf { gradle.taskGraph.hasTask('publish') }
+    }
+}

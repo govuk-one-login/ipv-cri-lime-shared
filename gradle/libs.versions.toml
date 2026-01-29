@@ -1,0 +1,63 @@
+[versions]
+apache_httpclient = "4.5.14"
+apache_httpcore = "4.4.16"
+aspect_jrt = "1.9.24"
+aws_sdk = "2.34.8"
+aws_powertools = "1.18.0"
+cri_common_lib = "7.0.0"
+opentelemetry_bom_alpha = "2.20.1-alpha"
+post_compile_weaving = "8.13.1"
+
+# test versions
+junit = "6.0.0"
+mockito = "5.20.0"
+webcompere = "2.1.8"
+
+[libraries]
+apache-httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "apache_httpclient" }
+apache-httpcore = { module = "org.apache.httpcomponents:httpcore", version.ref = "apache_httpcore" }
+
+aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "aspect_jrt" }
+
+aws-sdk-bom = { module = "software.amazon.awssdk:bom", version.ref = "aws_sdk" }
+aws-sdk-dynamodb = { module = "software.amazon.awssdk:dynamodb" }
+aws-sdk-auth = { module = "software.amazon.awssdk:auth" }
+aws-sdk-http-crt = { module = "software.amazon.awssdk:aws-crt-client" }
+aws-sdk-core = { module = "software.amazon.awssdk:sdk-core" }
+
+cri-common-lib = { module = "uk.gov.account:cri-common-lib", version.ref = "cri_common_lib" }
+
+lambda-powertools-logging = { module = "software.amazon.lambda:powertools-logging", version.ref = "aws_powertools" }
+lambda-powertools-metrics = { module = "software.amazon.lambda:powertools-metrics", version.ref = "aws_powertools" }
+lambda-powertools-parameters = { module = "software.amazon.lambda:powertools-parameters", version.ref = "aws_powertools" }
+
+opentelemetry-bom-alpha= { module = "io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom-alpha", version.ref = "opentelemetry_bom_alpha" }
+opentelemetry-aws-sdk= { module = "io.opentelemetry.instrumentation:opentelemetry-aws-sdk-2.2" }
+
+# test libs
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine" }
+mockito-bom = { module = "org.mockito:mockito-bom", version.ref = "mockito" }
+mockito-core = { module = "org.mockito:mockito-core" }
+mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter" }
+webcompere-system-stubs-core = { module = "uk.org.webcompere:system-stubs-core", version.ref = "webcompere" }
+webcompere-system-stubs-jupiter = { module = "uk.org.webcompere:system-stubs-jupiter", version.ref = "webcompere" }
+
+[bundles]
+aws-sdk-dynamodb = ["aws-sdk-dynamodb", "aws-sdk-auth", "aws-sdk-http-crt", "aws-sdk-core"]
+lambda-powertools = ["lambda-powertools-logging", "lambda-powertools-metrics", "lambda-powertools-parameters"]
+apache-http = ["apache-httpclient", "apache-httpcore"]
+junit = ["junit-jupiter", "junit-jupiter-api", "junit-jupiter-engine"]
+mockito = ["mockito-core", "mockito-junit-jupiter"]
+webcompere = ["webcompere-system-stubs-core", "webcompere-system-stubs-jupiter"]
+
+[plugins]
+idea = { id = "idea" }
+java = { id = "java" }
+java-library = { id = "java-library" }
+java-test-fixtures = { id = "java-test-fixtures" }
+post-compile-weaving = { id = "io.freefair.aspectj.post-compile-weaving", version.ref = "post_compile_weaving" }
+
+

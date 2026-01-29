@@ -1,0 +1,4 @@
+rootProject.name = 'ipv-cri-lime-shared'
+
+include 'lib-limeade'
+enableFeaturePreview('TYPESAFE_PROJECT_ACCESSORS')
