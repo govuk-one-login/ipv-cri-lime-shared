@@ -1,6 +1,5 @@
 package uk.gov.di.ipv.cri.lime.limeade.awsconfig;
 
-import uk.gov.di.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.ContainerCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
@@ -8,6 +7,7 @@ import software.amazon.awssdk.awscore.defaultsmode.DefaultsMode;
 import software.amazon.awssdk.http.SdkHttpClient;
 import software.amazon.awssdk.http.crt.AwsCrtHttpClient;
 import software.amazon.awssdk.regions.Region;
+import uk.gov.di.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
 
 @ExcludeClassFromGeneratedCoverageReport
 public final class AWSSDKHttpClientConfig {

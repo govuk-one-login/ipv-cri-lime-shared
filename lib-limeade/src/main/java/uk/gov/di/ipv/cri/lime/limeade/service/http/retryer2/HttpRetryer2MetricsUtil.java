@@ -1,9 +1,9 @@
 package uk.gov.di.ipv.cri.lime.limeade.service.http.retryer2;
 
-import uk.gov.di.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
-import uk.gov.di.ipv.cri.lime.limeade.util.metrics.MetricsProbe;
 import software.amazon.cloudwatchlogs.emf.model.DimensionSet;
 import software.amazon.cloudwatchlogs.emf.model.Unit;
+import uk.gov.di.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
+import uk.gov.di.ipv.cri.lime.limeade.util.metrics.MetricsProbe;
 
 public class HttpRetryer2MetricsUtil {
 
@@ -19,6 +19,11 @@ public class HttpRetryer2MetricsUtil {
      * via exact DIMENSION_ENDPOINT_NAME will locate all successful responses. Filtering via
      * DIMENSION_RESPONSE_STATUS_CODE will allow separating expected and unexpected status code
      * indicators from the remote API
+     *
+     * @param endpointName String
+     * @param metricsProbe
+     * @param statusCode
+     * @param responseLatencyMs
      */
     public static void captureHttpRetryerSendMetric(
             String endpointName,
@@ -41,6 +46,11 @@ public class HttpRetryer2MetricsUtil {
      * UNIT Use Sample Counts to get occurrences of this metric (Not Unit Summation) Failure in this
      * context means the request was unable to be sent at all. This could be due to being unable to
      * connect or not receiving any response post initial socket connection.
+     *
+     * @param endpointName String
+     * @param metricsProbe
+     * @param e
+     * @param responseLatencyMs
      */
     public static void captureHttpRetryerSendFailMetric(
             String endpointName, MetricsProbe metricsProbe, Exception e, long responseLatencyMs) {
@@ -58,6 +68,10 @@ public class HttpRetryer2MetricsUtil {
     /**
      * If Retrying is enabled, the try count reached is recorded Large retry counts should be
      * investigated if sustained
+     *
+     * @param endpointName String
+     * @param metricsProbe
+     * @param tryCount
      */
     public static void captureHttpRetryerSendRetryMetric(
             String endpointName, MetricsProbe metricsProbe, int tryCount) {

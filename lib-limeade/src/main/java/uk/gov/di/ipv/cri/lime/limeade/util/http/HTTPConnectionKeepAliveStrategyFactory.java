@@ -1,6 +1,5 @@
 package uk.gov.di.ipv.cri.lime.limeade.util.http;
 
-import uk.gov.di.ipv.cri.lime.limeade.annotation.ExcludeConstructorFromGeneratedCoverageReport;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpResponse;
@@ -9,6 +8,7 @@ import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.gov.di.ipv.cri.lime.limeade.annotation.ExcludeConstructorFromGeneratedCoverageReport;
 
 public final class HTTPConnectionKeepAliveStrategyFactory {
     private static final Logger LOGGER = LogManager.getLogger();

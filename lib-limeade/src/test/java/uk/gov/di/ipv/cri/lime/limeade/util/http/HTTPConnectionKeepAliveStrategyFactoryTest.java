@@ -1,10 +1,10 @@
 package uk.gov.di.ipv.cri.lime.limeade.util.http;
 
-import uk.gov.di.ipv.cri.lime.limeade.testfixtures.HttpResponseFixtures;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import uk.gov.di.ipv.cri.lime.limeade.testfixture.HttpResponseFixtures;
 
 import java.util.HashMap;
 import java.util.Map;

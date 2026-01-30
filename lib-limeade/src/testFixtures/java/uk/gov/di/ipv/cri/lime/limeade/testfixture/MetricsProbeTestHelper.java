@@ -1,4 +1,4 @@
-package uk.gov.di.ipv.cri.lime.limeade.testfixtures;
+package uk.gov.di.ipv.cri.lime.limeade.testfixture;
 
 import org.mockito.ArgumentCaptor;
 import software.amazon.cloudwatchlogs.emf.model.DimensionSet;

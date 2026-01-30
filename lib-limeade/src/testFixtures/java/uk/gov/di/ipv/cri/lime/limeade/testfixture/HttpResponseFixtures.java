@@ -1,6 +1,10 @@
-package uk.gov.di.ipv.cri.lime.limeade.testfixtures;
+package uk.gov.di.ipv.cri.lime.limeade.testfixture;
 
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HeaderIterator;
+import org.apache.http.HttpEntity;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.params.HttpParams;
@@ -14,7 +18,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-@SuppressWarnings("deprecation")
 public class HttpResponseFixtures {
     private HttpResponseFixtures() {
         throw new IllegalStateException("Test Fixtures");

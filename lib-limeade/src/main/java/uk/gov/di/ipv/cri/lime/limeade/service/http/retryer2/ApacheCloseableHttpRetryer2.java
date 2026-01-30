@@ -1,16 +1,16 @@
 package uk.gov.di.ipv.cri.lime.limeade.service.http.retryer2;
 
-import uk.gov.di.ipv.cri.lime.limeade.util.http.HTTPReply;
-import uk.gov.di.ipv.cri.lime.limeade.util.http.HTTPReplyHelper;
-import uk.gov.di.ipv.cri.lime.limeade.util.metrics.MetricsProbe;
-import uk.gov.di.ipv.cri.lime.limeade.util.timing.SleepHelper;
-import uk.gov.di.ipv.cri.lime.limeade.util.timing.StopWatch;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.gov.di.ipv.cri.lime.limeade.util.http.HTTPReply;
+import uk.gov.di.ipv.cri.lime.limeade.util.http.HTTPReplyHelper;
+import uk.gov.di.ipv.cri.lime.limeade.util.metrics.MetricsProbe;
+import uk.gov.di.ipv.cri.lime.limeade.util.timing.SleepHelper;
+import uk.gov.di.ipv.cri.lime.limeade.util.timing.StopWatch;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;

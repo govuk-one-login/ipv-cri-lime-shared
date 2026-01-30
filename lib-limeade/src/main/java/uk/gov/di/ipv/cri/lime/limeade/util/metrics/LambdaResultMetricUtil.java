@@ -1,8 +1,8 @@
 package uk.gov.di.ipv.cri.lime.limeade.util.metrics;
 
-import uk.gov.di.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
 import software.amazon.cloudwatchlogs.emf.model.DimensionSet;
 import software.amazon.cloudwatchlogs.emf.model.Unit;
+import uk.gov.di.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
 
 public class LambdaResultMetricUtil {
 
@@ -10,8 +10,7 @@ public class LambdaResultMetricUtil {
         // Utility Class
     }
 
-    public static void captureResultMetric(
-            LambdaResultMetrics lambdaResultMetrics, Result result) {
+    public static void captureResultMetric(LambdaResultMetrics lambdaResultMetrics, Result result) {
         lambdaResultMetrics
                 .getMetricsProbe()
                 .captureMetric(

@@ -1,10 +1,9 @@
-package uk.gov.di.ipv.cri.lime.limeade.testfixtures;
+package uk.gov.di.ipv.cri.lime.limeade.testfixture;
 
 import uk.gov.di.ipv.cri.lime.limeade.service.http.retryer.HttpRetryStatusConfig;
 
 import java.util.List;
 
-@SuppressWarnings("removal")
 public class HttpRetryStatusConfigFixtures {
     private HttpRetryStatusConfigFixtures() {
         throw new IllegalStateException("Test Fixtures");

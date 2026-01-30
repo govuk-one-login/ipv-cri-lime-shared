@@ -10,7 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 class StopWatchTest {
 
-    private final StopWatch stopWatch = new StopWatch();
+    // Stop watch will be usable irrelevant of its internal state
+    private StopWatch stopWatch = new StopWatch();
 
     @ParameterizedTest
     @CsvSource({

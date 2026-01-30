@@ -1,136 +1,236 @@
 plugins {
-    alias(libs.plugins.idea)
-    alias(libs.plugins.java)
-    alias(libs.plugins.post.compile.weaving)
+	alias(libs.plugins.idea)
+	alias(libs.plugins.java)
+	alias(libs.plugins.jacoco)
+	alias(libs.plugins.jacoco.report.aggregation)
+	alias(libs.plugins.spotless)
+	alias(libs.plugins.sonarqube)
+	alias(libs.plugins.post.compile.weaving)
+}
+
+defaultTasks 'clean', 'spotlessApply', 'build'
+
+repositories {
+	maven {
+		url = 'https://gds.jfrog.io/artifactory/di-allowed-repos'
+	}
+}
+
+sonar {
+	properties {
+		property "sonar.projectKey", "ipv-cri-lime-shared"
+		property "sonar.organization", "govuk-one-login"
+		property "sonar.host.url", "https://sonarcloud.io"
+		property "sonar.java.coveragePlugin", "jacoco"
+		property "sonar.coverage.jacoco.xmlReportPath", layout.buildDirectory.file("reports/jacoco/reports/reports.xml")
+		property "sonar.issue.ignore.multicriteria", "e1"
+		property "sonar.issue.ignore.multicriteria.e1.ruleKey", "java:S107"
+		property "sonar.issue.ignore.multicriteria.e1.resourceKey", "**/*.java"
+	}
+}
+
+spotless {
+	java {
+		target "**/src/**/*.java"
+		googleJavaFormat("1.19.2").aosp().formatJavadoc(true)
+		importOrder "", "javax", "java", "\\#"
+		removeUnusedImports()
+		forbidWildcardImports()
+		formatAnnotations()
+		endWithNewline()
+	}
+	groovyGradle {
+		target '**/*.gradle'
+		greclipse()
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	shell {
+		target '*.sh'
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	gherkin {
+		target 'acceptance-tests/src/test/resources/**/*.feature'
+		gherkinUtils()
+		endWithNewline()
+	}
+	flexmark {
+		target '**/*.md'
+		flexmark()
+		endWithNewline()
+	}
+	format 'misc', {
+		target '.gitignore', '.dockerignore', '.sdkmanrc'
+		trimTrailingWhitespace()
+		leadingSpacesToTabs(4)
+		endWithNewline()
+	}
+}
+
+reporting {
+	reports {
+		reports(JacocoCoverageReport) {
+			testSuiteName = "test"
+		}
+	}
+}
+
+dependencies {
+	jacocoAggregation project(":lib-limeade")
 }
 
 subprojects {
-    apply plugin: 'java-library'
-    apply plugin: 'io.freefair.aspectj.post-compile-weaving'
-    apply plugin: 'maven-publish'
-    apply plugin: 'signing'
+	apply plugin: 'java-library'
+	apply plugin: 'io.freefair.aspectj.post-compile-weaving'
+	apply plugin: 'maven-publish'
+	apply plugin: 'signing'
+	apply plugin: 'jacoco'
 
-    group = "${rootProject.group}.${project.name}"
+	group = "${rootProject.group}.${project.name}"
 
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(project.javaVersion.toInteger())
-        }
-        withJavadocJar()
-        withSourcesJar()
-    }
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(project.javaVersion.toInteger())
+		}
+		withJavadocJar()
+		withSourcesJar()
+	}
 
-    repositories {
-        maven {
-            url = 'https://gds.jfrog.io/artifactory/di-allowed-repos'
-        }
-    }
+	repositories {
+		maven {
+			url = 'https://gds.jfrog.io/artifactory/di-allowed-repos'
+		}
+	}
 
-    configurations {
-        mockitoAgent
-    }
+	configurations {
+		mockitoAgent
+	}
 
-    configurations.configureEach {
-        resolutionStrategy {
-            force "org.aspectj:aspectjrt:${libs.versions.aspect.jrt.get()}"
-            force "org.aspectj:aspectjtools:${libs.versions.aspect.jrt.get()}"
-        }
-    }
+	configurations.configureEach {
+		resolutionStrategy {
+			force "org.aspectj:aspectjrt:${libs.versions.aspect.jrt.get()}"
+			force "org.aspectj:aspectjtools:${libs.versions.aspect.jrt.get()}"
+		}
+	}
 
-    dependencies {
-        mockitoAgent platform(libs.mockito.bom)
-        mockitoAgent(libs.mockito.core) {
-            transitive = false
-        }
+	dependencies {
+		mockitoAgent platform(libs.mockito.platform.bom)
+		mockitoAgent(libs.mockito.core) {
+			transitive = false
+		}
+	}
 
-        aspect libs.bundles.lambda.powertools
+	test {
+		useJUnitPlatform()
+		outputs.upToDateWhen { false }
 
-        implementation platform(libs.aws.sdk.bom)
-        implementation libs.aspectjrt
+		jvmArgs("-javaagent:${configurations.mockitoAgent.asPath}", "-Xshare:off")
 
-        testImplementation platform(libs.junit.bom)
-        testImplementation platform(libs.mockito.bom)
-        testImplementation libs.bundles.junit
-        testImplementation libs.bundles.mockito
+		testLogging {
+			events = ["passed", "skipped", "failed"]
+			showStandardStreams = false
+			showExceptions = true
+			exceptionFormat = "short"
+			displayGranularity = 2
+		}
+	}
 
-        testRuntimeOnly "org.junit.platform:junit-platform-launcher"
-    }
+	jacocoTestReport {
+		dependsOn test
+		reports {
+			xml.required.set(true)
+			html.required.set(true)
+		}
+	}
 
-    test {
-        useJUnitPlatform()
-        jvmArgs("-javaagent:${configurations.mockitoAgent.asPath}", "-Xshare:off")
+	check.dependsOn jacocoTestCoverageVerification
+	jacocoTestCoverageVerification {
+		violationRules {
+			rule {
+				limit {
+					counter = 'LINE'
+					minimum = 0.90
+				}
+				limit {
+					counter = 'BRANCH'
+					minimum = 0.90
+				}
+			}
+		}
+	}
 
-        testLogging {
-            events = ["passed", "skipped", "failed"]
-            showStandardStreams = false
-            showExceptions = true
-            exceptionFormat = "short"
-            displayGranularity = 2
-        }
-    }
+	publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				from components.java
 
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
+				pom {
+					name = project.name
+					description = project.findProperty('description') ?: project.name
+					url = 'https://github.com/govuk-one-login/ipv-cri-lime-shared'
 
-                pom {
-                    name = project.name
-                    description = project.findProperty('description') ?: project.name
-                    url = 'https://github.com/govuk-one-login/ipv-cri-lime-shared'
+					licenses {
+						license {
+							name = 'MIT License'
+							url = 'https://opensource.org/licenses/MIT'
+						}
+					}
 
-                    licenses {
-                        license {
-                            name = 'MIT License'
-                            url = 'https://opensource.org/licenses/MIT'
-                        }
-                    }
+					developers {
+						developer {
+							id = 'ipv-cri-lime'
+							name = 'Lime'
+							organization = 'Government Digital Service'
+							organizationUrl = 'https://www.gov.uk/government/organisations/government-digital-service'
+						}
+					}
 
-                    developers {
-                        developer {
-                            id = 'ipv-cri-lime'
-                            name = 'Lime'
-                            organization = 'Government Digital Service'
-                            organizationUrl = 'https://www.gov.uk/government/organisations/government-digital-service'
-                        }
-                    }
+					scm {
+						connection = 'scm:git:git://github.com/govuk-one-login/ipv-cri-lime-shared.git'
+						developerConnection = 'scm:git:ssh://github.com/govuk-one-login/ipv-cri-lime-shared.git'
+						url = 'https://github.com/govuk-one-login/ipv-cri-lime-shared'
+					}
+				}
+			}
+		}
 
-                    scm {
-                        connection = 'scm:git:git://github.com/govuk-one-login/ipv-cri-lime-shared.git'
-                        developerConnection = 'scm:git:ssh://github.com/govuk-one-login/ipv-cri-lime-shared.git'
-                        url = 'https://github.com/govuk-one-login/ipv-cri-lime-shared'
-                    }
-                }
-            }
-        }
+		repositories {
+			maven {
+				name = 'OSSRH'
+				def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+				def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+				url = project.version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
 
-        repositories {
-            maven {
-                name = 'OSSRH'
-                def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
-                def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
-                url = project.version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+				credentials {
+					username = System.getenv('OSSRH_USERNAME') ?: ''
+					password = System.getenv('OSSRH_PASSWORD') ?: ''
+				}
+			}
+		}
+	}
 
-                credentials {
-                    username = System.getenv('OSSRH_USERNAME') ?: ''
-                    password = System.getenv('OSSRH_PASSWORD') ?: ''
-                }
-            }
-        }
-    }
+	signing {
+		def signingKey = System.getenv('GPG_PRIVATE_KEY')
+		def signingPassword = System.getenv('GPG_PASSPHRASE')
 
-    signing {
-        def signingKey = System.getenv('GPG_PRIVATE_KEY')
-        def signingPassword = System.getenv('GPG_PASSPHRASE')
+		if (signingKey && signingPassword) {
+			useInMemoryPgpKeys(signingKey, signingPassword)
+		}
 
-        if (signingKey && signingPassword) {
-            useInMemoryPgpKeys(signingKey, signingPassword)
-        }
+		sign publishing.publications.mavenJava
+	}
 
-        sign publishing.publications.mavenJava
-    }
+	tasks.withType(Sign).configureEach {
+		onlyIf { gradle.taskGraph.hasTask('publish') }
+	}
 
-    tasks.withType(Sign).configureEach {
-        onlyIf { gradle.taskGraph.hasTask('publish') }
-    }
+	tasks.withType(JavaCompile).configureEach {
+		options.compilerArgs << "-Xlint" << "-Xlint:-processing"
+	}
+
+	// Disable warnings about missing JavaDoc
+	tasks.withType(Javadoc).configureEach {
+		options.addStringOption('Xdoclint:none', '-quiet')
+	}
 }

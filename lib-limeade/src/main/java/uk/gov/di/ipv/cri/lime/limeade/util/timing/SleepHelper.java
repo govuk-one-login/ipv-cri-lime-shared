@@ -11,6 +11,9 @@ public class SleepHelper {
     /**
      * Calculates a wait time based on number of calls - starting from zero for the first call.
      * Using a busy wait
+     *
+     * @param callNumber
+     * @return
      */
     public long busyWaitWithExponentialBackOff(int callNumber) {
 
@@ -24,7 +27,7 @@ public class SleepHelper {
         }
 
         long endTime = System.currentTimeMillis();
-        return (endTime - startTime);
+        return (endTime - startTime); // timeWaited
     }
 
     public long busyWaitMilliseconds(int milliseconds) {
@@ -39,7 +42,7 @@ public class SleepHelper {
         }
 
         long endTime = System.currentTimeMillis();
-        return (endTime - startTime);
+        return (endTime - startTime); // timeWaited
     }
 
     private long calculateExponentialBackOffTimeMS(int callNumber) {
