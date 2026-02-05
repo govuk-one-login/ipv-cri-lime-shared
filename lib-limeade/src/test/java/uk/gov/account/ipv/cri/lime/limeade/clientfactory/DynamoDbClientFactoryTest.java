@@ -9,13 +9,16 @@ import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 import uk.org.webcompere.systemstubs.jupiter.SystemStub;
 import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SystemStubsExtension.class)
 class DynamoDbClientFactoryTest {
 
-    @SystemStub private final EnvironmentVariables environmentVariables = new EnvironmentVariables();
+    @SystemStub
+    private final EnvironmentVariables environmentVariables = new EnvironmentVariables();
 
     @BeforeEach
     void setUp() {

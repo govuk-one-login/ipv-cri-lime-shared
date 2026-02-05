@@ -1,6 +1,10 @@
 package uk.gov.account.ipv.cri.lime.limeade.testfixtures;
 
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HeaderIterator;
+import org.apache.http.HttpEntity;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.params.HttpParams;

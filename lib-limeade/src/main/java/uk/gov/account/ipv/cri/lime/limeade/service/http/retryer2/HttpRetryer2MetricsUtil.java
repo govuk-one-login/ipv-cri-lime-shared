@@ -1,9 +1,9 @@
 package uk.gov.account.ipv.cri.lime.limeade.service.http.retryer2;
 
-import uk.gov.account.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
-import uk.gov.account.ipv.cri.lime.limeade.util.metrics.MetricsProbe;
 import software.amazon.cloudwatchlogs.emf.model.DimensionSet;
 import software.amazon.cloudwatchlogs.emf.model.Unit;
+import uk.gov.account.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
+import uk.gov.account.ipv.cri.lime.limeade.util.metrics.MetricsProbe;
 
 public class HttpRetryer2MetricsUtil {
 

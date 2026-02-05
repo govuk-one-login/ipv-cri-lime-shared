@@ -2,9 +2,9 @@ package uk.gov.account.ipv.cri.lime.limeade.clientfactory;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.instrumentation.awssdk.v2_2.AwsSdkTelemetry;
-import uk.gov.account.ipv.cri.lime.limeade.awsconfig.AWSSDKHttpClientConfig;
 import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import uk.gov.account.ipv.cri.lime.limeade.awsconfig.AWSSDKHttpClientConfig;
 
 public final class DynamoDbClientFactory {
 
@@ -25,7 +25,8 @@ public final class DynamoDbClientFactory {
                             .defaultsMode(AWSSDKHttpClientConfig.DEFAULTS_MODE)
                             .overrideConfiguration(
                                     ClientOverrideConfiguration.builder()
-                                            .addExecutionInterceptor(telemetry.newExecutionInterceptor())
+                                            .addExecutionInterceptor(
+                                                    telemetry.newExecutionInterceptor())
                                             .build())
                             .build();
         }

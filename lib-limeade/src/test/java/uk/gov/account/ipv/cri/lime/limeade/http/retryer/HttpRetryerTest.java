@@ -1,9 +1,5 @@
 package uk.gov.account.ipv.cri.lime.limeade.http.retryer;
 
-import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpResponseFixtures;
-import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpRetryStatusConfigFixtures;
-import uk.gov.account.ipv.cri.lime.limeade.service.http.retryer.HttpRetryStatusConfig;
-import uk.gov.account.ipv.cri.lime.limeade.service.http.retryer.HttpRetryer;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ConnectTimeoutException;
@@ -16,6 +12,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.account.ipv.cri.lime.limeade.service.http.retryer.HttpRetryStatusConfig;
+import uk.gov.account.ipv.cri.lime.limeade.service.http.retryer.HttpRetryer;
+import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpResponseFixtures;
+import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpRetryStatusConfigFixtures;
 import uk.gov.di.ipv.cri.common.library.util.EventProbe;
 
 import java.io.IOException;
@@ -26,7 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("removal") // tests a deprecated class

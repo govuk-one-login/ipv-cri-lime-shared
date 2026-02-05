@@ -1,7 +1,7 @@
 package uk.gov.account.ipv.cri.lime.limeade.service.http.retryer2;
 
-import uk.gov.account.ipv.cri.lime.limeade.util.http.HTTPReply;
 import org.apache.http.client.methods.HttpUriRequest;
+import uk.gov.account.ipv.cri.lime.limeade.util.http.HTTPReply;
 
 import java.io.IOException;
 

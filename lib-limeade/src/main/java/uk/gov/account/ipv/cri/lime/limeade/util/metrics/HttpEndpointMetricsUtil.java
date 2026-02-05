@@ -1,9 +1,9 @@
 package uk.gov.account.ipv.cri.lime.limeade.util.metrics;
 
-import uk.gov.account.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
-import uk.gov.account.ipv.cri.lime.limeade.strategy.Strategy;
 import software.amazon.cloudwatchlogs.emf.model.DimensionSet;
 import software.amazon.cloudwatchlogs.emf.model.Unit;
+import uk.gov.account.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
+import uk.gov.account.ipv.cri.lime.limeade.strategy.Strategy;
 
 @ExcludeClassFromGeneratedCoverageReport
 public class HttpEndpointMetricsUtil {

@@ -1,16 +1,18 @@
 package uk.gov.account.ipv.cri.lime.limeade.util.http;
 
-import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpResponseFixtures;
 import org.apache.http.HttpResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpResponseFixtures;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class HTTPReplyHelperTest {

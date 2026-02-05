@@ -1,11 +1,5 @@
 package uk.gov.account.ipv.cri.lime.limeade.http.retryer2;
 
-import uk.gov.account.ipv.cri.lime.limeade.service.http.retryer2.ApacheCloseableHttpRetryer2;
-import uk.gov.account.ipv.cri.lime.limeade.service.http.retryer2.HttpRetryer2MetricsUtil;
-import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpResponseFixtures;
-import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpRetryer2ConfigTestFixture;
-import uk.gov.account.ipv.cri.lime.limeade.testfixtures.MetricsProbeTestHelper;
-import uk.gov.account.ipv.cri.lime.limeade.util.metrics.MetricsProbe;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ConnectTimeoutException;
@@ -20,6 +14,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import software.amazon.cloudwatchlogs.emf.model.DimensionSet;
 import software.amazon.cloudwatchlogs.emf.model.Unit;
+import uk.gov.account.ipv.cri.lime.limeade.service.http.retryer2.ApacheCloseableHttpRetryer2;
+import uk.gov.account.ipv.cri.lime.limeade.service.http.retryer2.HttpRetryer2MetricsUtil;
+import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpResponseFixtures;
+import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpRetryer2ConfigTestFixture;
+import uk.gov.account.ipv.cri.lime.limeade.testfixtures.MetricsProbeTestHelper;
+import uk.gov.account.ipv.cri.lime.limeade.util.metrics.MetricsProbe;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -28,7 +28,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ApacheCloseableHttpRetryer2Test {
@@ -131,8 +135,7 @@ class ApacheCloseableHttpRetryer2Test {
                             HttpRetryer2MetricsUtil.FinalSendOutcomeMetric.DIMENSION_ENDPOINT_NAME,
                             TEST_ENDPOINT_NAME,
                             HttpRetryer2MetricsUtil.FinalSendOutcomeMetric.DIMENSION_SEND_OUTCOME,
-                            HttpRetryer2MetricsUtil.FinalSendOutcomeMetric.SEND_OK
-                                    .toString()),
+                            HttpRetryer2MetricsUtil.FinalSendOutcomeMetric.SEND_OK.toString()),
                     1,
                     0,
                     Unit.COUNT,
