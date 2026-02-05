@@ -1,4 +1,16 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
 rootProject.name = 'ipv-cri-lime-shared'
 
 include 'lib-limeade'
+
 enableFeaturePreview('TYPESAFE_PROJECT_ACCESSORS')
+
+dependencyResolutionManagement {
+	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+	repositories {
+		maven {
+			url = 'https://gds.jfrog.io/artifactory/di-allowed-repos'
+		}
+	}
+}

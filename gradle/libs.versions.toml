@@ -15,7 +15,7 @@ webcompere = "2.1.8"
 # plugin versions
 post_compile_weaving = "8.13.1"
 spotless = "8.0.0"
-googleJavaFormat = "1.29.0"
+googleJavaFormat = "1.19.2"
 
 [libraries]
 apache-httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "apache_httpclient" }

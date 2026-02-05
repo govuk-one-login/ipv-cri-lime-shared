@@ -1,34 +1,31 @@
 plugins {
-    alias(libs.plugins.java.test.fixtures)
+	alias(libs.plugins.java.test.fixtures)
 }
 
 dependencies {
-    implementation platform(libs.opentelemetry.bom.alpha)
-    implementation libs.cri.common.lib
-    implementation libs.opentelemetry.aws.sdk
-    implementation libs.bundles.aws.sdk.dynamodb
-    implementation libs.bundles.lambda.powertools
-    implementation libs.bundles.apache.http
+	implementation platform(libs.opentelemetry.bom.alpha)
+	implementation libs.cri.common.lib
+	implementation libs.opentelemetry.aws.sdk
+	implementation libs.bundles.aws.sdk.dynamodb
+	implementation libs.bundles.lambda.powertools
+	implementation libs.bundles.apache.http
 
-    testImplementation libs.bundles.junit
-    testImplementation libs.bundles.mockito
-    testImplementation libs.bundles.webcompere
+	testImplementation libs.bundles.junit
+	testImplementation libs.bundles.mockito
+	testImplementation libs.bundles.webcompere
 
-    testFixturesImplementation platform(libs.junit.bom)
-    testFixturesImplementation platform(libs.mockito.bom)
-    testFixturesImplementation libs.bundles.junit
-    testFixturesImplementation libs.bundles.mockito
-    testFixturesImplementation libs.bundles.apache.http
-    testFixturesImplementation libs.bundles.lambda.powertools
+	testFixturesImplementation platform(libs.junit.bom)
+	testFixturesImplementation platform(libs.mockito.bom)
+	testFixturesImplementation libs.bundles.junit
+	testFixturesImplementation libs.bundles.mockito
+	testFixturesImplementation libs.bundles.apache.http
+	testFixturesImplementation libs.bundles.lambda.powertools
 }
 
 
 tasks.withType(Javadoc).configureEach {
-    options.addStringOption('Xdoclint:all,-missing', '-quiet')
-    // FIXME: silence javadoc warnings for deprecated packages, remove me
-    exclude '**/ipv/cri/lime/limeade/service/http/retryer/**'
-    exclude '**/ipv/cri/lime/limeade/testfixtures/HttpRetryStatusConfigFixtures.java'
+	options.addStringOption('Xdoclint:all,-missing', '-quiet')
+	// FIXME: silence javadoc warnings for deprecated packages, remove me
+	exclude '**/ipv/cri/lime/limeade/service/http/retryer/**'
+	exclude '**/ipv/cri/lime/limeade/testfixtures/HttpRetryStatusConfigFixtures.java'
 }
-
-
-
