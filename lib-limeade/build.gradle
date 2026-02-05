@@ -26,7 +26,7 @@ dependencies {
 tasks.withType(Javadoc).configureEach {
     options.addStringOption('Xdoclint:all,-missing', '-quiet')
     // FIXME: silence javadoc warnings for deprecated packages, remove me
-    exclude '**/ipv/cri/limeade/service/http/retryer/**'
+    exclude '**/ipv/cri/lime/limeade/service/http/retryer/**'
     exclude '**/ipv/cri/lime/limeade/testfixtures/HttpRetryStatusConfigFixtures.java'
 }
 

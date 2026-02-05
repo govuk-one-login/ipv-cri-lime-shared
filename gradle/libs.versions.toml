@@ -6,12 +6,16 @@ aws_sdk = "2.34.8"
 aws_powertools = "1.18.0"
 cri_common_lib = "7.0.0"
 opentelemetry_bom_alpha = "2.20.1-alpha"
-post_compile_weaving = "8.13.1"
 
 # test versions
 junit = "6.0.0"
 mockito = "5.20.0"
 webcompere = "2.1.8"
+
+# plugin versions
+post_compile_weaving = "8.13.1"
+spotless = "8.0.0"
+googleJavaFormat = "1.29.0"
 
 [libraries]
 apache-httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "apache_httpclient" }
@@ -59,5 +63,6 @@ java = { id = "java" }
 java-library = { id = "java-library" }
 java-test-fixtures = { id = "java-test-fixtures" }
 post-compile-weaving = { id = "io.freefair.aspectj.post-compile-weaving", version.ref = "post_compile_weaving" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 
 

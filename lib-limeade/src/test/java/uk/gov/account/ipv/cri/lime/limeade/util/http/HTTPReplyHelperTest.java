@@ -1,0 +1,71 @@
+package uk.gov.account.ipv.cri.lime.limeade.util.http;
+
+import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpResponseFixtures;
+import org.apache.http.HttpResponse;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
+class HTTPReplyHelperTest {
+
+    private static final String ENDPOINT_NAME = "Test Endpoint";
+    private static final String NO_BODY_TEXT_FORMAT = "No %s response body text found";
+
+    @Test
+    void shouldRetrieveResult() throws IOException {
+
+        int expectedStatusCode = 200;
+        String expectedBodyContent = "Test Response Body";
+        String expectedTestHeaderKey = "X-TEST-HEADER";
+        String expectedTestHeaderValue = "test_value";
+
+        Map<String, String> expectedHeadersMap = new HashMap<>();
+        expectedHeadersMap.put(expectedTestHeaderKey, expectedTestHeaderValue);
+
+        HttpResponse mockResponse =
+                HttpResponseFixtures.createHttpResponse(
+                        expectedStatusCode, expectedHeadersMap, expectedBodyContent, false);
+
+        HTTPReply reply = HTTPReplyHelper.retrieveResponse(mockResponse, ENDPOINT_NAME);
+
+        assertEquals(expectedBodyContent, reply.responseBody);
+        assertEquals(expectedStatusCode, reply.statusCode);
+        assertNotNull(reply.responseHeaders.get(expectedTestHeaderKey));
+        assertEquals(expectedTestHeaderValue, reply.responseHeaders.get(expectedTestHeaderKey));
+    }
+
+    @Test
+    void shouldSetNoBodyTextWhenEntityUtilsReturnsNull() throws IOException {
+
+        int expectedStatusCode = 200;
+        String expectedBodyContent = String.format(NO_BODY_TEXT_FORMAT, ENDPOINT_NAME);
+
+        HttpResponse mockResponse =
+                HttpResponseFixtures.createHttpResponse(expectedStatusCode, null, null, false);
+
+        HTTPReply reply = HTTPReplyHelper.retrieveResponse(mockResponse, ENDPOINT_NAME);
+
+        assertEquals(expectedBodyContent, reply.responseBody);
+        assertEquals(expectedStatusCode, reply.statusCode);
+    }
+
+    @Test
+    void shouldThrowIOExceptionWhenIOExceptionEncounteredRetrievingHTTPReply() {
+
+        HttpResponse mockResponse = HttpResponseFixtures.createHttpResponse(200, null, null, true);
+
+        IOException thrownException =
+                assertThrows(
+                        IOException.class,
+                        () -> HTTPReplyHelper.retrieveResponse(mockResponse, ENDPOINT_NAME));
+
+        assertEquals("ERROR!", thrownException.getMessage());
+    }
+}
