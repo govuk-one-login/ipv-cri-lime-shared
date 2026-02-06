@@ -1,0 +1,35 @@
+name: PR check
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: JDK setup
+        uses: actions/setup-java@v5
+        with:
+          java-version-file: '.sdkmanrc'
+          distribution: 'corretto'
+
+      - name: Gradle setup
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Checks and tests
+        run: ./gradlew spotlessCheck test --continue
+
+      - name: Upload test report
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: unit-test-report
+          path: build/reports/tests/test/
+          retention-days: 3
