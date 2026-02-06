@@ -1,8 +1,15 @@
 plugins {
+	alias(libs.plugins.java.library)
 	alias(libs.plugins.java.test.fixtures)
+	alias(libs.plugins.post.compile.weaving)
+	alias(libs.plugins.maven.publish)
 }
 
 dependencies {
+	aspect libs.bundles.lambda.powertools
+	implementation platform(libs.aws.sdk.bom)
+	implementation libs.aspectjrt
+
 	implementation platform(libs.opentelemetry.bom.alpha)
 	implementation libs.cri.common.lib
 	implementation libs.opentelemetry.aws.sdk
@@ -10,8 +17,6 @@ dependencies {
 	implementation libs.bundles.lambda.powertools
 	implementation libs.bundles.apache.http
 
-	testImplementation libs.bundles.junit
-	testImplementation libs.bundles.mockito
 	testImplementation libs.bundles.webcompere
 
 	testFixturesImplementation platform(libs.junit.bom)

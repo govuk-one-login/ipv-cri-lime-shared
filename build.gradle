@@ -1,6 +1,10 @@
+import com.vanniktech.maven.publish.DeploymentValidation
+
 plugins {
 	alias(libs.plugins.idea)
+	alias(libs.plugins.java)
 	alias(libs.plugins.spotless)
+	alias(libs.plugins.maven.publish)
 	alias(libs.plugins.post.compile.weaving) apply false
 }
 
@@ -24,130 +28,142 @@ spotless {
 }
 
 subprojects {
-	apply plugin: 'java-library'
-	apply plugin: 'io.freefair.aspectj.post-compile-weaving'
-	apply plugin: 'maven-publish'
-	apply plugin: 'signing'
-
-	group = "${rootProject.group}.${project.name}"
-
-	java {
-		toolchain {
-			languageVersion = JavaLanguageVersion.of(project.javaVersion.toInteger())
-		}
-		withJavadocJar()
-		withSourcesJar()
-	}
-
-	configurations {
-		mockitoAgent
-	}
-
-	configurations.configureEach {
-		resolutionStrategy {
-			force "org.aspectj:aspectjrt:${libs.versions.aspect.jrt.get()}"
-			force "org.aspectj:aspectjtools:${libs.versions.aspect.jrt.get()}"
-		}
-	}
-
-	dependencies {
-		mockitoAgent platform(libs.mockito.bom)
-		mockitoAgent(libs.mockito.core) {
-			transitive = false
+	plugins.withId(libs.plugins.java.library.get().pluginId) {
+		java {
+			toolchain {
+				languageVersion = JavaLanguageVersion.of(project.javaVersion.toInteger())
+			}
 		}
 
-		aspect libs.bundles.lambda.powertools
+		configurations {
+			mockitoAgent
+		}
 
-		implementation platform(libs.aws.sdk.bom)
-		implementation libs.aspectjrt
+		configurations.configureEach {
+			resolutionStrategy {
+				force "org.aspectj:aspectjrt:${libs.versions.aspect.jrt.get()}"
+				force "org.aspectj:aspectjtools:${libs.versions.aspect.jrt.get()}"
+			}
+		}
 
-		testImplementation platform(libs.junit.bom)
-		testImplementation platform(libs.mockito.bom)
-		testImplementation libs.bundles.junit
-		testImplementation libs.bundles.mockito
+		dependencies {
+			mockitoAgent platform(libs.mockito.bom)
+			mockitoAgent(libs.mockito.core) {
+				transitive = false
+			}
 
-		testRuntimeOnly "org.junit.platform:junit-platform-launcher"
-	}
+			testImplementation platform(libs.junit.bom)
+			testImplementation platform(libs.mockito.bom)
+			testImplementation libs.bundles.junit
+			testImplementation libs.bundles.mockito
 
-	test {
-		useJUnitPlatform()
-		jvmArgs("-javaagent:${configurations.mockitoAgent.asPath}", "-Xshare:off")
+			testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+		}
 
-		testLogging {
-			events = ["passed", "skipped", "failed"]
-			showStandardStreams = false
-			showExceptions = true
-			exceptionFormat = "short"
-			displayGranularity = 2
+		test {
+			useJUnitPlatform()
+			jvmArgs("-javaagent:${configurations.mockitoAgent.asPath}", "-Xshare:off")
+
+			testLogging {
+				events = ["passed", "skipped", "failed"]
+				showStandardStreams = false
+				showExceptions = true
+				exceptionFormat = "short"
+				displayGranularity = 2
+			}
+		}
+
+		tasks.withType(JavaCompile).configureEach {
+			options.encoding = 'UTF-8'
 		}
 	}
 
-	publishing {
-		publications {
-			mavenJava(MavenPublication) {
-				from components.java
+	plugins.withId(libs.plugins.maven.publish.get().pluginId) {
+		def artifactId = project.findProperty('artifactId') ?: { throw new GradleException("artifactId must be set in gradle.properties") }()
 
-				pom {
-					name = project.name
-					description = project.findProperty('description') ?: project.name
+		mavenPublishing {
+			publishToMavenCentral(true, DeploymentValidation.NONE)
+			signAllPublications()
+			coordinates(project.group.toString(), artifactId as String, project.version.toString())
+
+			pom {
+				name = artifactId
+				description = project.findProperty('description') ?: artifactId
+				url = 'https://github.com/govuk-one-login/ipv-cri-lime-shared'
+
+				licenses {
+					license {
+						name = 'MIT License'
+						url = 'https://github.com/govuk-one-login/ipv-cri-lime-shared/blob/main/LICENSE'
+						distribution = 'repo'
+					}
+				}
+
+				developers {
+					developer {
+						id = 'ipv-cri-lime'
+						name = 'Lime'
+						organization = 'Government Digital Service'
+						organizationUrl = 'https://www.gov.uk/government/organisations/government-digital-service'
+					}
+				}
+
+				scm {
+					connection = 'scm:git:git://github.com/govuk-one-login/ipv-cri-lime-shared.git'
+					developerConnection = 'scm:git:ssh://github.com/govuk-one-login/ipv-cri-lime-shared.git'
 					url = 'https://github.com/govuk-one-login/ipv-cri-lime-shared'
-
-					licenses {
-						license {
-							name = 'MIT License'
-							url = 'https://opensource.org/licenses/MIT'
-						}
-					}
-
-					developers {
-						developer {
-							id = 'ipv-cri-lime'
-							name = 'Lime'
-							organization = 'Government Digital Service'
-							organizationUrl = 'https://www.gov.uk/government/organisations/government-digital-service'
-						}
-					}
-
-					scm {
-						connection = 'scm:git:git://github.com/govuk-one-login/ipv-cri-lime-shared.git'
-						developerConnection = 'scm:git:ssh://github.com/govuk-one-login/ipv-cri-lime-shared.git'
-						url = 'https://github.com/govuk-one-login/ipv-cri-lime-shared'
-					}
 				}
 			}
 		}
 
-		repositories {
-			maven {
-				name = 'OSSRH'
-				def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
-				def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
-				url = project.version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+		def publishGroupPath = project.group.toString().replace('.', '/')
+		def publishCheckUrl = "https://repo1.maven.org/maven2/${publishGroupPath}/${artifactId}/${project.version}/${artifactId}-${project.version}.pom"
+		def publishCoordinates = "${project.group}:${artifactId}:${project.version}"
 
-				credentials {
-					username = System.getenv('OSSRH_USERNAME') ?: ''
-					password = System.getenv('OSSRH_PASSWORD') ?: ''
+		tasks.matching { it.name == 'publish' }.configureEach {
+			onlyIf {
+				def connection = URI.create(publishCheckUrl).toURL().openConnection() as HttpURLConnection
+				connection.requestMethod = 'HEAD'
+				connection.connectTimeout = 5000
+				connection.readTimeout = 5000
+
+				try {
+					def exists = connection.responseCode == 200
+					if (exists) {
+						println "SKIPPED: ${publishCoordinates} already published at this version"
+					} else {
+						println "PUBLISHING: ${publishCoordinates}"
+					}
+					return !exists
+				} finally {
+					connection.disconnect()
 				}
 			}
 		}
 	}
+}
 
-	signing {
-		def signingKey = System.getenv('GPG_PRIVATE_KEY')
-		def signingPassword = System.getenv('GPG_PASSPHRASE')
+tasks.register('publishAll') {
+	group = 'publishing'
+	description = 'publishes all lib-* subprojects to central (skips already published versions)'
 
-		if (signingKey && signingPassword) {
-			useInMemoryPgpKeys(signingKey, signingPassword)
+	dependsOn subprojects.findAll { it.name.startsWith('lib-') }.collect { ":${it.name}:publish" }
+}
+
+tasks.register('publishAllToMavenLocal') {
+	group = 'publishing'
+	description = 'for install of libs to local m2 (useful for testing new changes in other projects before publishing)'
+
+	dependsOn subprojects.findAll { it.name.startsWith('lib-') }.collect { ":${it.name}:publishToMavenLocal" }
+}
+
+gradle.taskGraph.whenReady { graph ->
+	if (graph.hasTask(':publishAllToMavenLocal')) {
+		subprojects.each { subproject ->
+			// disable signing when publishing to local m2
+			subproject.tasks.withType(Sign).configureEach {
+				enabled = false
+			}
 		}
-
-		sign publishing.publications.mavenJava
-	}
-
-	tasks.withType(Sign).configureEach {
-		onlyIf { gradle.taskGraph.hasTask('publish') }
-	}
-
-	tasks.withType(JavaCompile).configureEach {
-		options.encoding = 'UTF-8'
 	}
 }

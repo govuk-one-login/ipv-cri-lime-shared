@@ -13,6 +13,7 @@ mockito = "5.20.0"
 webcompere = "2.1.8"
 
 # plugin versions
+maven_publish = "0.36.0"
 post_compile_weaving = "8.13.1"
 spotless = "8.0.0"
 googleJavaFormat = "1.19.2"
@@ -64,5 +65,4 @@ java-library = { id = "java-library" }
 java-test-fixtures = { id = "java-test-fixtures" }
 post-compile-weaving = { id = "io.freefair.aspectj.post-compile-weaving", version.ref = "post_compile_weaving" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-
-
+maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven_publish" }
