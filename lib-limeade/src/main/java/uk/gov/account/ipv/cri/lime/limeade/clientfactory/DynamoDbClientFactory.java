@@ -16,7 +16,6 @@ public final class DynamoDbClientFactory {
 
     public static synchronized DynamoDbClient getDynamoDbClient() {
         if (dynamoDbClient == null) {
-            AwsSdkTelemetry telemetry = AwsSdkTelemetry.create(GlobalOpenTelemetry.get());
             dynamoDbClient =
                     DynamoDbClient.builder()
                             .credentialsProvider(AWSSDKHttpClientConfig.AWS_CREDENTIALS_PROVIDER)
@@ -26,7 +25,9 @@ public final class DynamoDbClientFactory {
                             .overrideConfiguration(
                                     ClientOverrideConfiguration.builder()
                                             .addExecutionInterceptor(
-                                                    telemetry.newExecutionInterceptor())
+                                                    AwsSdkTelemetry.create(
+                                                                    GlobalOpenTelemetry.get())
+                                                            .newExecutionInterceptor())
                                             .build())
                             .build();
         }

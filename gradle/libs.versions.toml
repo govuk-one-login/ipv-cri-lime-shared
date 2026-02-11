@@ -60,6 +60,8 @@ webcompere = ["webcompere-system-stubs-core", "webcompere-system-stubs-jupiter"]
 
 [plugins]
 idea = { id = "idea" }
+jacoco = { id = "jacoco" }
+jacoco-report-aggregation = { id = "jacoco-report-aggregation" }
 java = { id = "java" }
 java-library = { id = "java-library" }
 java-test-fixtures = { id = "java-test-fixtures" }

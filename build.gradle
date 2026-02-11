@@ -1,11 +1,27 @@
 import com.vanniktech.maven.publish.DeploymentValidation
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
 	alias(libs.plugins.idea)
+	alias(libs.plugins.jacoco)
+	alias(libs.plugins.jacoco.report.aggregation)
 	alias(libs.plugins.java)
-	alias(libs.plugins.spotless)
 	alias(libs.plugins.maven.publish)
 	alias(libs.plugins.post.compile.weaving) apply false
+	alias(libs.plugins.spotless)
+}
+
+dependencies {
+	subprojects.forEach { sub ->
+		jacocoAggregation sub
+	}
+}
+
+reporting {
+	reports.create('unitTestCodeCoverageReport', JacocoCoverageReport) {
+		testSuiteName = 'test'
+	}
 }
 
 spotless {
@@ -28,6 +44,8 @@ spotless {
 }
 
 subprojects {
+	apply plugin: 'jacoco'
+
 	plugins.withId(libs.plugins.java.library.get().pluginId) {
 		java {
 			toolchain {
@@ -63,13 +81,47 @@ subprojects {
 		test {
 			useJUnitPlatform()
 			jvmArgs("-javaagent:${configurations.mockitoAgent.asPath}", "-Xshare:off")
-
+			finalizedBy jacocoTestReport, jacocoTestCoverageVerification
 			testLogging {
-				events = ["passed", "skipped", "failed"]
+				events = [
+					TestLogEvent.PASSED,
+					TestLogEvent.SKIPPED,
+					TestLogEvent.FAILED
+				]
 				showStandardStreams = false
 				showExceptions = true
-				exceptionFormat = "short"
+				showCauses = true
+				exceptionFormat = TestExceptionFormat.FULL
 				displayGranularity = 2
+			}
+			afterSuite { suite, result ->
+				if (!suite.parent) {
+					def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+					def startItem = "|  ", endItem = "  |"
+					def repeatLength = startItem.length() + output.length() + endItem.length()
+					println("\n" + ("-" * repeatLength) + "\n" + startItem + output + endItem + "\n" + ("-" * repeatLength))
+				}
+			}
+		}
+
+		jacocoTestReport {
+			reports {
+				xml.required.set(true)
+			}
+		}
+
+		jacocoTestCoverageVerification {
+			violationRules {
+				rule {
+					limit {
+						counter = 'LINE'
+						minimum = 0.85
+					}
+					limit {
+						counter = 'BRANCH'
+						minimum = 0.85
+					}
+				}
 			}
 		}
 

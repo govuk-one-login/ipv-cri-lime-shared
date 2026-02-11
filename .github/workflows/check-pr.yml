@@ -19,17 +19,18 @@ jobs:
         with:
           java-version-file: '.sdkmanrc'
           distribution: 'corretto'
+          cache: 'gradle'
 
       - name: Gradle setup
         uses: gradle/actions/setup-gradle@v5
 
       - name: Checks and tests
-        run: ./gradlew spotlessCheck test --continue
+        run: ./gradlew spotlessCheck unitTestCodeCoverageReport --continue
 
       - name: Upload test report
         if: failure()
         uses: actions/upload-artifact@v6
         with:
-          name: unit-test-report
-          path: build/reports/tests/test/
+          name: test-report
+          path: build/reports/jacoco/
           retention-days: 3
