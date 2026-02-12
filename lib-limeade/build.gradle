@@ -5,6 +5,25 @@ plugins {
 	alias(libs.plugins.maven.publish)
 }
 
+// fix name of published test fixtures capability: lib-limeade -> limeade
+afterEvaluate {
+	configurations.named("testFixturesApiElements") {
+		outgoing {
+			capability("${rootProject.group}:${project.artifactId}-test-fixtures:${project.version}")
+		}
+	}
+	configurations.named("testFixturesRuntimeElements") {
+		outgoing {
+			capability("${rootProject.group}:${project.artifactId}-test-fixtures:${project.version}")
+		}
+	}
+	configurations.named("testFixturesSourcesElements") {
+		outgoing {
+			capability("${rootProject.group}:${project.artifactId}-test-fixtures:${project.version}")
+		}
+	}
+}
+
 dependencies {
 	aspect libs.bundles.lambda.powertools
 	implementation platform(libs.aws.sdk.bom)
