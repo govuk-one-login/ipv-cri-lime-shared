@@ -172,25 +172,30 @@ subprojects {
 		def publishCheckUrl = "https://repo1.maven.org/maven2/${publishGroupPath}/${artifactId}/${project.version}/${artifactId}-${project.version}.pom"
 		def publishCoordinates = "${project.group}:${artifactId}:${project.version}"
 
-		tasks.matching { it.name == 'publish' }.configureEach {
-			onlyIf {
+		def alreadyPublished = null
+		def checkIfAlreadyPublished = {
+			if (alreadyPublished == null) {
 				def connection = URI.create(publishCheckUrl).toURL().openConnection() as HttpURLConnection
 				connection.requestMethod = 'HEAD'
 				connection.connectTimeout = 5000
 				connection.readTimeout = 5000
 
 				try {
-					def exists = connection.responseCode == 200
-					if (exists) {
-						println "SKIPPED: ${publishCoordinates} already published at this version"
+					alreadyPublished = connection.responseCode == 200
+					if (alreadyPublished) {
+						println "SKIPPED TASK: ${publishCoordinates} already published at this version"
 					} else {
 						println "PUBLISHING: ${publishCoordinates}"
 					}
-					return !exists
 				} finally {
 					connection.disconnect()
 				}
 			}
+			return !alreadyPublished
+		}
+
+		tasks.matching { it.name == 'publish' || it.name.contains('MavenCentral') }.configureEach {
+			onlyIf { checkIfAlreadyPublished() }
 		}
 	}
 }
