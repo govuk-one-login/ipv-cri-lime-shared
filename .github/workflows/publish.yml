@@ -1,0 +1,33 @@
+name: Publish
+
+on:
+  push:
+    branches: [ 'main' ]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: JDK setup
+        uses: actions/setup-java@v5
+        with:
+          java-version-file: '.sdkmanrc'
+          distribution: 'corretto'
+
+      - name: Gradle setup
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Publish artifacts
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.OSSRH_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.OSSRH_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_PASSPHRASE }}
+        run: ./gradlew publishAll
