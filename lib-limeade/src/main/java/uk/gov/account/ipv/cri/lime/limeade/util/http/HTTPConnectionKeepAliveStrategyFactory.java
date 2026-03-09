@@ -6,12 +6,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.account.ipv.cri.lime.limeade.annotation.ExcludeConstructorFromGeneratedCoverageReport;
 
 public final class HTTPConnectionKeepAliveStrategyFactory {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(HTTPConnectionKeepAliveStrategyFactory.class);
 
     @ExcludeConstructorFromGeneratedCoverageReport
     private HTTPConnectionKeepAliveStrategyFactory() {
@@ -42,7 +43,7 @@ public final class HTTPConnectionKeepAliveStrategyFactory {
         };
     }
 
-    // Honor 'keep-alive' header if present
+    // Honour 'keep-alive' header if present
     private static long retrieveRemoteHeaderKeepAliveHeaderIfPresent(
             long fallbackKeepAliveSeconds, HttpResponse response) {
         HeaderElementIterator it =

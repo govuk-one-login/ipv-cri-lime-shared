@@ -1,7 +1,7 @@
 package uk.gov.account.ipv.cri.lime.limeade.util.metrics;
 
-import software.amazon.cloudwatchlogs.emf.model.DimensionSet;
-import software.amazon.cloudwatchlogs.emf.model.Unit;
+import software.amazon.lambda.powertools.metrics.model.DimensionSet;
+import software.amazon.lambda.powertools.metrics.model.MetricUnit;
 import uk.gov.account.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
 
 public class LambdaResultMetricUtil {
@@ -20,7 +20,7 @@ public class LambdaResultMetricUtil {
                                         lambdaResultMetrics.getLambdaName(),
                                 LambdaResultMetric.DIMENSION_RESULT, result.toString()),
                         1, // Always 1 - single journey
-                        Unit.COUNT);
+                        MetricUnit.COUNT);
     }
 
     @ExcludeClassFromGeneratedCoverageReport

@@ -1,8 +1,8 @@
 package uk.gov.account.ipv.cri.lime.limeade.testfixtures;
 
 import org.mockito.ArgumentCaptor;
-import software.amazon.cloudwatchlogs.emf.model.DimensionSet;
-import software.amazon.cloudwatchlogs.emf.model.Unit;
+import software.amazon.lambda.powertools.metrics.model.DimensionSet;
+import software.amazon.lambda.powertools.metrics.model.MetricUnit;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +16,7 @@ public class MetricsProbeTestHelper {
      * @param expectedMetricName - String
      * @param expectedDimensionSet - this objects count of keys and values will be compared
      * @param expectedValue - metric value normally 1 if using Count as the Unit
-     * @param expectedUnit - AWS Unit type - typically Count
+     * @param expectedMetricUnit - AWS Unit type - typically Count
      */
     public static void metricsProbeArgumentVerifier(
             int callNumber,
@@ -24,11 +24,11 @@ public class MetricsProbeTestHelper {
             DimensionSet expectedDimensionSet,
             double expectedValue,
             double expectedValueEpsilon,
-            Unit expectedUnit,
+            MetricUnit expectedMetricUnit,
             ArgumentCaptor<String> metricNameCaptor,
             ArgumentCaptor<DimensionSet> dimensionSetArgumentCaptor,
             ArgumentCaptor<Double> valueArgumentCaptor,
-            ArgumentCaptor<Unit> unitArgumentCaptor) {
+            ArgumentCaptor<MetricUnit> unitArgumentCaptor) {
 
         assertEquals(expectedMetricName, metricNameCaptor.getAllValues().get(callNumber));
         assertExpectedDimensionSet(
@@ -39,7 +39,7 @@ public class MetricsProbeTestHelper {
                 expectedValue,
                 valueArgumentCaptor.getAllValues().get(callNumber),
                 expectedValueEpsilon);
-        assertEquals(expectedUnit, unitArgumentCaptor.getAllValues().get(callNumber));
+        assertEquals(expectedMetricUnit, unitArgumentCaptor.getAllValues().get(callNumber));
     }
 
     /**
@@ -47,7 +47,7 @@ public class MetricsProbeTestHelper {
      * @param expectedMetricName - String
      * @param expectedDimensionSet - this objects count of keys and values will be compared
      * @param expectedValue - metric value normally 1 if using Count as the Unit
-     * @param expectedUnit - AWS Unit type - typlically Count
+     * @param expectedMetricUnit - AWS Unit type - typically Count
      */
     public static void metricsProbeArgumentVerifierWithIgnoredDimensionValues(
             int callNumber,
@@ -55,11 +55,11 @@ public class MetricsProbeTestHelper {
             DimensionSet expectedDimensionSet,
             double expectedValue,
             double expectedValueEpsilon,
-            Unit expectedUnit,
+            MetricUnit expectedMetricUnit,
             ArgumentCaptor<String> metricNameCaptor,
             ArgumentCaptor<DimensionSet> dimensionSetArgumentCaptor,
             ArgumentCaptor<Double> valueArgumentCaptor,
-            ArgumentCaptor<Unit> unitArgumentCaptor,
+            ArgumentCaptor<MetricUnit> unitArgumentCaptor,
             List<String> dimensionToIgnoreValues) {
 
         System.out.println(metricNameCaptor.getAllValues().get(callNumber));
@@ -72,7 +72,7 @@ public class MetricsProbeTestHelper {
                 expectedValue,
                 valueArgumentCaptor.getAllValues().get(callNumber),
                 expectedValueEpsilon);
-        assertEquals(expectedUnit, unitArgumentCaptor.getAllValues().get(callNumber));
+        assertEquals(expectedMetricUnit, unitArgumentCaptor.getAllValues().get(callNumber));
     }
 
     public static void assertExpectedDimensionSet(

@@ -1,7 +1,7 @@
 package uk.gov.account.ipv.cri.lime.limeade.service.http.retryer;
 
 /**
- * @deprecated in favor of interface based HttpRetryer2
+ * @deprecated in favour of interface based HttpRetryer2
  */
 @Deprecated(since = "HttpRetryer2", forRemoval = true)
 public interface HttpRetryStatusConfig {

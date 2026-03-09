@@ -8,9 +8,11 @@ plugins {
 	alias(libs.plugins.jacoco.report.aggregation)
 	alias(libs.plugins.java)
 	alias(libs.plugins.maven.publish)
-	alias(libs.plugins.post.compile.weaving) apply false
 	alias(libs.plugins.spotless)
+	alias(libs.plugins.sonarqube)
 }
+
+defaultTasks 'clean', 'spotlessApply', 'build'
 
 dependencies {
 	subprojects.forEach { sub ->
@@ -21,6 +23,15 @@ dependencies {
 reporting {
 	reports.create('unitTestCodeCoverageReport', JacocoCoverageReport) {
 		testSuiteName = 'test'
+	}
+}
+
+sonar {
+	properties {
+		property "sonar.projectKey", "govuk-one-login_ipv-cri-lime-shared"
+		property "sonar.organization", "govuk-one-login"
+		property "sonar.java.coveragePlugin", "jacoco"
+		property "sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/jacoco/unitTestCodeCoverageReport/unitTestCodeCoverageReport.xml")
 	}
 }
 
@@ -41,15 +52,32 @@ spotless {
 		trimTrailingWhitespace()
 		endWithNewline()
 	}
+
+	flexmark {
+		target '**/*.md'
+		flexmark()
+		endWithNewline()
+	}
+
+	format 'misc', {
+		target '.gitignore', '.sdkmanrc'
+		trimTrailingWhitespace()
+		leadingSpacesToTabs(4)
+		endWithNewline()
+	}
 }
 
 subprojects {
 	apply plugin: 'jacoco'
 
+	tasks.withType(JavaCompile).configureEach {
+		options.compilerArgs << "-Xlint"
+	}
+
 	plugins.withId(libs.plugins.java.library.get().pluginId) {
 		java {
 			toolchain {
-				languageVersion = JavaLanguageVersion.of(project.javaVersion.toInteger())
+				languageVersion = JavaLanguageVersion.of(21)
 			}
 		}
 
@@ -58,11 +86,6 @@ subprojects {
 		}
 
 		configurations.configureEach {
-			resolutionStrategy {
-				force "org.aspectj:aspectjrt:${libs.versions.aspect.jrt.get()}"
-				force "org.aspectj:aspectjtools:${libs.versions.aspect.jrt.get()}"
-			}
-
 			// these clients are excluded as we are using the aws-crt client exclusively
 			// https://aws.amazon.com/blogs/developer/tuning-the-aws-java-sdk-2-x-to-reduce-startup-time/
 			exclude group:"software.amazon.awssdk", module: "apache-client"
@@ -125,18 +148,14 @@ subprojects {
 				rule {
 					limit {
 						counter = 'LINE'
-						minimum = 0.85
+						minimum = 0.93
 					}
 					limit {
 						counter = 'BRANCH'
-						minimum = 0.85
+						minimum = 0.93
 					}
 				}
 			}
-		}
-
-		tasks.withType(JavaCompile).configureEach {
-			options.encoding = 'UTF-8'
 		}
 	}
 

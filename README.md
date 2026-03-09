@@ -2,21 +2,6 @@
 
 A shared library repository maintained by the Lime team.
 
-## Project Structure
-
-```
-ipv-cri-lime-shared/
-├── lib-limeade/              # publishable library subproject
-│   ├── src/
-│   ├── build.gradle
-│   └── gradle.properties     # subproject artifact id, version, and description
-├── build.gradle              # root build logic and publishing config
-├── settings.gradle           # add new subprojects to this file
-├── gradle.properties         # root properties (group id, java version, gradle flags etc.)
-└── gradle/
-    └── libs.versions.toml    # dependency version catalog
-```
-
 Publishable subprojects follow the `lib-*` naming convention. Only these are included in the `publishAll` task.
 
 ## Versioning
@@ -56,26 +41,26 @@ Don't forget to include `mavenLocal()` in the consuming projects maven repositor
 ## Adding a New Library
 
 1. Create the subproject directory following the `lib-*` naming convention:
+
    ```
    lib-mylib/
    ├── src/main/java/
    ├── build.gradle
    └── gradle.properties
    ```
-
 2. Set the artefact id and initial version in the subproject's `gradle.properties`:
+
    ```properties
    artifactId=mylib
    version=1.0.0
    description=My new shared library
    ```
-
 3. Register the subproject in the root `settings.gradle`:
+
    ```groovy
    include 'lib-limeade'
-   include 'lib-mylib'   // add this line
+   include 'lib-mylib'   // new lib
    ```
-
 4. Configure the subproject build in `lib-mylib/build.gradle`. Follow the pattern in `lib-limeade/build.gradle`. Apply the required plugins, declare dependencies from `libs.versions.toml`, and apply any publishing configuration inherited from the root.
 
 The root `build.gradle` automatically picks up any `lib-*` subproject and includes it in `publishAll`.

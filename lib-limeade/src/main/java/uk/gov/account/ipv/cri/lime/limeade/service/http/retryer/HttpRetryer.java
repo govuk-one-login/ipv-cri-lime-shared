@@ -4,8 +4,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.account.ipv.cri.lime.limeade.util.http.HTTPReply;
 import uk.gov.account.ipv.cri.lime.limeade.util.http.HTTPReplyHelper;
 import uk.gov.account.ipv.cri.lime.limeade.util.timing.SleepHelper;
@@ -15,13 +15,13 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 
 /**
- * @deprecated in favor of interface based HttpRetryer2
+ * @deprecated in favour of interface based HttpRetryer2
  */
 @Deprecated(since = "HttpRetryer2", forRemoval = true)
 @SuppressWarnings("removal")
 public class HttpRetryer {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpRetryer.class);
 
     public static final long HTTP_RETRY_WAIT_TIME_LIMIT_MS = 12800L;
 

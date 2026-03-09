@@ -3,8 +3,8 @@ package uk.gov.account.ipv.cri.lime.limeade.util.http;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 public final class HTTPReplyHelper {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(HTTPReplyHelper.class);
 
     private HTTPReplyHelper() {
         throw new UnsupportedOperationException(
@@ -37,8 +37,7 @@ public final class HTTPReplyHelper {
             return new HTTPReply(httpStatusCode, responseHeaders, responseBody);
         } catch (IOException e) {
 
-            LOGGER.error(String.format("IOException retrieving %s response body", endpointName));
-            LOGGER.debug(e.getMessage());
+            LOGGER.error("IOException retrieving {} response body", endpointName);
 
             throw e;
         }

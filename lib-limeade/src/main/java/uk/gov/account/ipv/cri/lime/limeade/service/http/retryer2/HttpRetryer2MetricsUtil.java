@@ -1,9 +1,9 @@
 package uk.gov.account.ipv.cri.lime.limeade.service.http.retryer2;
 
-import software.amazon.cloudwatchlogs.emf.model.DimensionSet;
-import software.amazon.cloudwatchlogs.emf.model.Unit;
+import software.amazon.lambda.powertools.metrics.model.DimensionSet;
+import software.amazon.lambda.powertools.metrics.model.MetricUnit;
 import uk.gov.account.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
-import uk.gov.account.ipv.cri.lime.limeade.util.metrics.MetricsProbe;
+import uk.gov.account.ipv.cri.lime.limeade.util.metrics.metricsprobe.MetricsProbe;
 
 public class HttpRetryer2MetricsUtil {
 
@@ -14,11 +14,12 @@ public class HttpRetryer2MetricsUtil {
     }
 
     /**
-     * Records a successful send from the HttpRetryer2. Note Response Latency is captured as the
-     * metric UNIT Use Sample Counts to get occurrences of this metric (Not Unit Summation) Filter
-     * via exact DIMENSION_ENDPOINT_NAME will locate all successful responses. Filtering via
-     * DIMENSION_RESPONSE_STATUS_CODE will allow separating expected and unexpected status code
-     * indicators from the remote API
+     * Records a successful send from the HttpRetryer2, capturing the response latency as the metric
+     * value. Filter by DIMENSION_ENDPOINT_NAME to see all successful responses for an endpoint.
+     * Filter by DIMENSION_RESPONSE_STATUS_CODE to separate expected from unexpected status codes
+     * returned by the remote API.
+     *
+     * <p>When querying in CloudWatch, use SampleCount to count occurrences rather than Sum.
      */
     public static void captureHttpRetryerSendMetric(
             String endpointName,
@@ -33,14 +34,15 @@ public class HttpRetryer2MetricsUtil {
                         SendSuccessMetric.DIMENSION_RESPONSE_STATUS_CODE,
                         String.valueOf(statusCode)),
                 responseLatencyMs,
-                Unit.MILLISECONDS);
+                MetricUnit.MILLISECONDS);
     }
 
     /**
-     * Records a failed send from the HttpRetryer2. Note Response Latency is captured as the metric
-     * UNIT Use Sample Counts to get occurrences of this metric (Not Unit Summation) Failure in this
-     * context means the request was unable to be sent at all. This could be due to being unable to
-     * connect or not receiving any response post initial socket connection.
+     * Records a failed send from the HttpRetryer2, capturing the time elapsed before failure as the
+     * metric value. A failure here means the request could not be sent at all, either the
+     * connection could not be established, or no response was received after the socket connected.
+     *
+     * <p>When querying in CloudWatch, use SampleCount to count occurrences rather than Sum.
      */
     public static void captureHttpRetryerSendFailMetric(
             String endpointName, MetricsProbe metricsProbe, Exception e, long responseLatencyMs) {
@@ -52,11 +54,11 @@ public class HttpRetryer2MetricsUtil {
                         SendFailureMetric.DIMENSION_FAILURE_CAUSE,
                         e.getClass().getSimpleName()),
                 responseLatencyMs,
-                Unit.MILLISECONDS);
+                MetricUnit.MILLISECONDS);
     }
 
     /**
-     * If Retrying is enabled, the try count reached is recorded Large retry counts should be
+     * If Retrying is enabled, the try count reached is recorded. Large retry counts should be
      * investigated if sustained
      */
     public static void captureHttpRetryerSendRetryMetric(
@@ -69,7 +71,7 @@ public class HttpRetryer2MetricsUtil {
                         SendRetryMetric.DIMENSION_TRY_COUNT,
                         String.valueOf(tryCount)),
                 1, // Always 1 - single journey
-                Unit.COUNT);
+                MetricUnit.COUNT);
     }
 
     // When the final http retryer finished what was the outcome
@@ -86,7 +88,7 @@ public class HttpRetryer2MetricsUtil {
                         FinalSendOutcomeMetric.DIMENSION_SEND_OUTCOME,
                         finalSendMetric.toString()),
                 1, // Always 1 - single journey
-                Unit.COUNT);
+                MetricUnit.COUNT);
     }
 
     public enum FinalSendOutcomeMetric {

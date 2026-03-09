@@ -5,6 +5,7 @@
 ## Checklist
 
 - [ ] **Version updated in `lib-*/gradle.properties`** (if publishing changes to a library)
+- [ ] **CHANGELOG updated in `lib-*/CHANGELOG.md`**
 
 ### Issue tracking
 

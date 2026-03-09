@@ -12,14 +12,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import software.amazon.cloudwatchlogs.emf.model.DimensionSet;
-import software.amazon.cloudwatchlogs.emf.model.Unit;
+import software.amazon.lambda.powertools.metrics.model.DimensionSet;
+import software.amazon.lambda.powertools.metrics.model.MetricUnit;
 import uk.gov.account.ipv.cri.lime.limeade.service.http.retryer2.ApacheCloseableHttpRetryer2;
 import uk.gov.account.ipv.cri.lime.limeade.service.http.retryer2.HttpRetryer2MetricsUtil;
 import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpResponseFixtures;
 import uk.gov.account.ipv.cri.lime.limeade.testfixtures.HttpRetryer2ConfigTestFixture;
 import uk.gov.account.ipv.cri.lime.limeade.testfixtures.MetricsProbeTestHelper;
-import uk.gov.account.ipv.cri.lime.limeade.util.metrics.MetricsProbe;
+import uk.gov.account.ipv.cri.lime.limeade.util.metrics.metricsprobe.MetricsProbe;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -78,8 +78,9 @@ class ApacheCloseableHttpRetryer2Test {
                 ArgumentCaptor.forClass(DimensionSet.class);
         ArgumentCaptor<Double> valueArgumentCaptor = ArgumentCaptor.forClass(Double.class);
         ArgumentCaptor.forClass(Double.class);
-        ArgumentCaptor<Unit> unitArgumentCaptor = ArgumentCaptor.forClass(Unit.class);
-        ArgumentCaptor.forClass(Unit.class);
+        ArgumentCaptor<MetricUnit> metricUnitArgumentCaptor =
+                ArgumentCaptor.forClass(MetricUnit.class);
+        ArgumentCaptor.forClass(MetricUnit.class);
 
         InOrder inOrderMockMetricsProbeSequence = inOrder(mockMetricsProbe);
 
@@ -93,7 +94,7 @@ class ApacheCloseableHttpRetryer2Test {
                             metricNameCaptor.capture(),
                             dimensionSetArgumentCaptor.capture(),
                             valueArgumentCaptor.capture(),
-                            unitArgumentCaptor.capture());
+                            metricUnitArgumentCaptor.capture());
 
             checkSendStatusCodeRetryThenMaxRetriesMetricSequence(
                     testMaxRetries + 1,
@@ -101,7 +102,7 @@ class ApacheCloseableHttpRetryer2Test {
                     metricNameCaptor,
                     dimensionSetArgumentCaptor,
                     valueArgumentCaptor,
-                    unitArgumentCaptor);
+                    metricUnitArgumentCaptor);
         } else {
             inOrderMockMetricsProbeSequence
                     .verify(mockMetricsProbe, times(2))
@@ -109,7 +110,7 @@ class ApacheCloseableHttpRetryer2Test {
                             metricNameCaptor.capture(),
                             dimensionSetArgumentCaptor.capture(),
                             valueArgumentCaptor.capture(),
-                            unitArgumentCaptor.capture());
+                            metricUnitArgumentCaptor.capture());
 
             MetricsProbeTestHelper.metricsProbeArgumentVerifier(
                     0,
@@ -122,11 +123,11 @@ class ApacheCloseableHttpRetryer2Test {
                             String.valueOf(statusCode)),
                     1,
                     TEST_LATENCY_EPSILON_MS,
-                    Unit.MILLISECONDS,
+                    MetricUnit.MILLISECONDS,
                     metricNameCaptor,
                     dimensionSetArgumentCaptor,
                     valueArgumentCaptor,
-                    unitArgumentCaptor);
+                    metricUnitArgumentCaptor);
 
             MetricsProbeTestHelper.metricsProbeArgumentVerifier(
                     1,
@@ -138,11 +139,11 @@ class ApacheCloseableHttpRetryer2Test {
                             HttpRetryer2MetricsUtil.FinalSendOutcomeMetric.SEND_OK.toString()),
                     1,
                     0,
-                    Unit.COUNT,
+                    MetricUnit.COUNT,
                     metricNameCaptor,
                     dimensionSetArgumentCaptor,
                     valueArgumentCaptor,
-                    unitArgumentCaptor);
+                    metricUnitArgumentCaptor);
         }
         verifyNoMoreInteractions(mockMetricsProbe);
         inOrderMockMetricsProbeSequence.verifyNoMoreInteractions();
@@ -190,8 +191,9 @@ class ApacheCloseableHttpRetryer2Test {
                 ArgumentCaptor.forClass(DimensionSet.class);
         ArgumentCaptor<Double> valueArgumentCaptor = ArgumentCaptor.forClass(Double.class);
         ArgumentCaptor.forClass(Double.class);
-        ArgumentCaptor<Unit> unitArgumentCaptor = ArgumentCaptor.forClass(Unit.class);
-        ArgumentCaptor.forClass(Unit.class);
+        ArgumentCaptor<MetricUnit> metricUnitArgumentCaptor =
+                ArgumentCaptor.forClass(MetricUnit.class);
+        ArgumentCaptor.forClass(MetricUnit.class);
 
         InOrder inOrderMockMetricsProbeSequence = inOrder(mockMetricsProbe);
 
@@ -205,7 +207,7 @@ class ApacheCloseableHttpRetryer2Test {
                             metricNameCaptor.capture(),
                             dimensionSetArgumentCaptor.capture(),
                             valueArgumentCaptor.capture(),
-                            unitArgumentCaptor.capture());
+                            metricUnitArgumentCaptor.capture());
 
             checkSendExceptionRetryThenMaxRetriesMetricSequence(
                     mockHttpClientExpectedTimes,
@@ -213,7 +215,7 @@ class ApacheCloseableHttpRetryer2Test {
                     metricNameCaptor,
                     dimensionSetArgumentCaptor,
                     valueArgumentCaptor,
-                    unitArgumentCaptor);
+                    metricUnitArgumentCaptor);
 
             if (exceptionToThrow.equals("ConnectTimeoutException")) {
                 assertInstanceOf(ConnectTimeoutException.class, thrownException);
@@ -227,7 +229,7 @@ class ApacheCloseableHttpRetryer2Test {
                             metricNameCaptor.capture(),
                             dimensionSetArgumentCaptor.capture(),
                             valueArgumentCaptor.capture(),
-                            unitArgumentCaptor.capture());
+                            metricUnitArgumentCaptor.capture());
 
             MetricsProbeTestHelper.metricsProbeArgumentVerifier(
                     0,
@@ -239,11 +241,11 @@ class ApacheCloseableHttpRetryer2Test {
                             thrownException.getClass().getSimpleName()),
                     1,
                     TEST_LATENCY_EPSILON_MS,
-                    Unit.MILLISECONDS,
+                    MetricUnit.MILLISECONDS,
                     metricNameCaptor,
                     dimensionSetArgumentCaptor,
                     valueArgumentCaptor,
-                    unitArgumentCaptor);
+                    metricUnitArgumentCaptor);
 
             MetricsProbeTestHelper.metricsProbeArgumentVerifier(
                     1,
@@ -255,11 +257,11 @@ class ApacheCloseableHttpRetryer2Test {
                             "non_retryable_exception"), // Fatal
                     1,
                     0,
-                    Unit.COUNT,
+                    MetricUnit.COUNT,
                     metricNameCaptor,
                     dimensionSetArgumentCaptor,
                     valueArgumentCaptor,
-                    unitArgumentCaptor);
+                    metricUnitArgumentCaptor);
 
             assertInstanceOf(IOException.class, thrownException);
         }
@@ -298,8 +300,9 @@ class ApacheCloseableHttpRetryer2Test {
                 ArgumentCaptor.forClass(DimensionSet.class);
         ArgumentCaptor<Double> valueArgumentCaptor = ArgumentCaptor.forClass(Double.class);
         ArgumentCaptor.forClass(Double.class);
-        ArgumentCaptor<Unit> unitArgumentCaptor = ArgumentCaptor.forClass(Unit.class);
-        ArgumentCaptor.forClass(Unit.class);
+        ArgumentCaptor<MetricUnit> metricUnitArgumentCaptor =
+                ArgumentCaptor.forClass(MetricUnit.class);
+        ArgumentCaptor.forClass(MetricUnit.class);
 
         InOrder inOrderMockMetricsProbeSequence = inOrder(mockMetricsProbe);
         inOrderMockMetricsProbeSequence
@@ -308,7 +311,7 @@ class ApacheCloseableHttpRetryer2Test {
                         metricNameCaptor.capture(),
                         dimensionSetArgumentCaptor.capture(),
                         valueArgumentCaptor.capture(),
-                        unitArgumentCaptor.capture());
+                        metricUnitArgumentCaptor.capture());
 
         MetricsProbeTestHelper.metricsProbeArgumentVerifier(
                 0,
@@ -320,11 +323,11 @@ class ApacheCloseableHttpRetryer2Test {
                         String.valueOf(500)),
                 1,
                 TEST_LATENCY_EPSILON_MS,
-                Unit.MILLISECONDS,
+                MetricUnit.MILLISECONDS,
                 metricNameCaptor,
                 dimensionSetArgumentCaptor,
                 valueArgumentCaptor,
-                unitArgumentCaptor);
+                metricUnitArgumentCaptor);
 
         MetricsProbeTestHelper.metricsProbeArgumentVerifier(
                 1,
@@ -336,11 +339,11 @@ class ApacheCloseableHttpRetryer2Test {
                         String.valueOf(1)),
                 1,
                 0,
-                Unit.COUNT,
+                MetricUnit.COUNT,
                 metricNameCaptor,
                 dimensionSetArgumentCaptor,
                 valueArgumentCaptor,
-                unitArgumentCaptor);
+                metricUnitArgumentCaptor);
 
         MetricsProbeTestHelper.metricsProbeArgumentVerifier(
                 2,
@@ -352,11 +355,11 @@ class ApacheCloseableHttpRetryer2Test {
                         String.valueOf(999)),
                 1,
                 TEST_LATENCY_EPSILON_MS,
-                Unit.MILLISECONDS,
+                MetricUnit.MILLISECONDS,
                 metricNameCaptor,
                 dimensionSetArgumentCaptor,
                 valueArgumentCaptor,
-                unitArgumentCaptor);
+                metricUnitArgumentCaptor);
 
         MetricsProbeTestHelper.metricsProbeArgumentVerifier(
                 3,
@@ -368,11 +371,11 @@ class ApacheCloseableHttpRetryer2Test {
                         "non_retryable_status"),
                 1,
                 0,
-                Unit.COUNT,
+                MetricUnit.COUNT,
                 metricNameCaptor,
                 dimensionSetArgumentCaptor,
                 valueArgumentCaptor,
-                unitArgumentCaptor);
+                metricUnitArgumentCaptor);
 
         verifyNoMoreInteractions(mockMetricsProbe);
         inOrderMockMetricsProbeSequence.verifyNoMoreInteractions();
@@ -386,7 +389,7 @@ class ApacheCloseableHttpRetryer2Test {
             ArgumentCaptor<String> metricNameCaptor,
             ArgumentCaptor<DimensionSet> dimensionSetArgumentCaptor,
             ArgumentCaptor<Double> valueArgumentCaptor,
-            ArgumentCaptor<Unit> unitArgumentCaptor) {
+            ArgumentCaptor<MetricUnit> metricUnitArgumentCaptor) {
 
         int retry = 0;
         int metric = 0;
@@ -412,11 +415,11 @@ class ApacheCloseableHttpRetryer2Test {
                             String.valueOf(statusCode)),
                     1,
                     TEST_LATENCY_EPSILON_MS,
-                    Unit.MILLISECONDS,
+                    MetricUnit.MILLISECONDS,
                     metricNameCaptor,
                     dimensionSetArgumentCaptor,
                     valueArgumentCaptor,
-                    unitArgumentCaptor);
+                    metricUnitArgumentCaptor);
 
             metric++;
 
@@ -432,11 +435,11 @@ class ApacheCloseableHttpRetryer2Test {
                                 String.valueOf(retry = retry + 1)),
                         1,
                         0,
-                        Unit.COUNT,
+                        MetricUnit.COUNT,
                         metricNameCaptor,
                         dimensionSetArgumentCaptor,
                         valueArgumentCaptor,
-                        unitArgumentCaptor);
+                        metricUnitArgumentCaptor);
 
             } else {
                 MetricsProbeTestHelper.metricsProbeArgumentVerifier(
@@ -452,11 +455,11 @@ class ApacheCloseableHttpRetryer2Test {
                                         .toString()),
                         1,
                         0,
-                        Unit.COUNT,
+                        MetricUnit.COUNT,
                         metricNameCaptor,
                         dimensionSetArgumentCaptor,
                         valueArgumentCaptor,
-                        unitArgumentCaptor);
+                        metricUnitArgumentCaptor);
             }
             metric++;
         }
@@ -468,7 +471,7 @@ class ApacheCloseableHttpRetryer2Test {
             ArgumentCaptor<String> metricNameCaptor,
             ArgumentCaptor<DimensionSet> dimensionSetArgumentCaptor,
             ArgumentCaptor<Double> valueArgumentCaptor,
-            ArgumentCaptor<Unit> unitArgumentCaptor) {
+            ArgumentCaptor<MetricUnit> metricUnitArgumentCaptor) {
 
         int retry = 0;
         int metric = 0;
@@ -493,11 +496,11 @@ class ApacheCloseableHttpRetryer2Test {
                             caughtIOException.getClass().getSimpleName()),
                     1,
                     TEST_LATENCY_EPSILON_MS,
-                    Unit.MILLISECONDS,
+                    MetricUnit.MILLISECONDS,
                     metricNameCaptor,
                     dimensionSetArgumentCaptor,
                     valueArgumentCaptor,
-                    unitArgumentCaptor);
+                    metricUnitArgumentCaptor);
 
             metric++;
 
@@ -513,11 +516,11 @@ class ApacheCloseableHttpRetryer2Test {
                                 String.valueOf(retry = retry + 1)),
                         1,
                         0,
-                        Unit.COUNT,
+                        MetricUnit.COUNT,
                         metricNameCaptor,
                         dimensionSetArgumentCaptor,
                         valueArgumentCaptor,
-                        unitArgumentCaptor);
+                        metricUnitArgumentCaptor);
 
             } else {
                 MetricsProbeTestHelper.metricsProbeArgumentVerifier(
@@ -533,11 +536,11 @@ class ApacheCloseableHttpRetryer2Test {
                                         .toString()),
                         1,
                         0,
-                        Unit.COUNT,
+                        MetricUnit.COUNT,
                         metricNameCaptor,
                         dimensionSetArgumentCaptor,
                         valueArgumentCaptor,
-                        unitArgumentCaptor);
+                        metricUnitArgumentCaptor);
             }
             metric++;
         }

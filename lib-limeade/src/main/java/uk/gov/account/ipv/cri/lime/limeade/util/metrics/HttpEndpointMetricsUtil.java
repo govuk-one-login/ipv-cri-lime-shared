@@ -1,9 +1,10 @@
 package uk.gov.account.ipv.cri.lime.limeade.util.metrics;
 
-import software.amazon.cloudwatchlogs.emf.model.DimensionSet;
-import software.amazon.cloudwatchlogs.emf.model.Unit;
+import software.amazon.lambda.powertools.metrics.model.DimensionSet;
+import software.amazon.lambda.powertools.metrics.model.MetricUnit;
 import uk.gov.account.ipv.cri.lime.limeade.annotation.ExcludeClassFromGeneratedCoverageReport;
 import uk.gov.account.ipv.cri.lime.limeade.strategy.Strategy;
+import uk.gov.account.ipv.cri.lime.limeade.util.metrics.metricsprobe.MetricsProbe;
 
 @ExcludeClassFromGeneratedCoverageReport
 public class HttpEndpointMetricsUtil {
@@ -29,7 +30,7 @@ public class HttpEndpointMetricsUtil {
                         HttpEndpointRequestMetric.DIMENSION_STATE,
                         requestState.toString()),
                 1, // Always 1 - single journey
-                Unit.COUNT);
+                MetricUnit.COUNT);
     }
 
     public static void captureHttpEndpointResponseStateMetric(
@@ -49,14 +50,15 @@ public class HttpEndpointMetricsUtil {
                         HttpEndpointRequestMetric.DIMENSION_STATE,
                         responseState.toString()),
                 1, // Always 1 - single journey
-                Unit.COUNT);
+                MetricUnit.COUNT);
     }
 
     /**
      * For some token APIs certain status codes indicate unrecoverable critical failures.
      *
-     * @param httpEndpointMetrics
-     * @param metricsProbe
+     * @param httpEndpointMetrics the endpoint metric dimensions to record against
+     * @param metricsProbe the metrics probe to capture the metric with
+     * @param strategy the strategy used for the request
      */
     public static void captureHttpEndpointResponseStatusCodeAlertMetric(
             HttpEndpointMetrics httpEndpointMetrics, MetricsProbe metricsProbe, Strategy strategy) {
@@ -72,18 +74,18 @@ public class HttpEndpointMetricsUtil {
                         HttpEndpointRequestMetric.DIMENSION_STATUS_CODE_ALERT,
                         "critical_status_code"),
                 1, // Always 1 - single journey
-                Unit.COUNT);
+                MetricUnit.COUNT);
     }
 
     /**
-     * This captures the latency of the http response. Note In contrast to the other metrics in this
-     * helper, HTTP_ENDPOINT is not the metric name DIMENSION_LATENCY_MS is the metricName and with
-     * the latency value stored in value. We should not capture unique or highly variable values in
-     * dimensions
+     * Captures the HTTP response latency. Unlike the other metrics in this class, the metric name
+     * here is HTTP_ENDPOINT_LATENCY_MS rather than HTTP_ENDPOINT. This is intentional because
+     * dimensions should not hold unique or highly variable values such as latency.
      *
-     * @param httpEndpointMetrics
-     * @param metricsProbe
-     * @param latencyMs
+     * @param httpEndpointMetrics the endpoint metric dimensions to record against
+     * @param metricsProbe the metrics probe to capture the metric with
+     * @param strategy the strategy used for the request
+     * @param latencyMs the response latency in milliseconds
      */
     public static void captureHttpEndpointResponseLatencyMetric(
             HttpEndpointMetrics httpEndpointMetrics,
@@ -99,8 +101,8 @@ public class HttpEndpointMetricsUtil {
                         Direction.RESPONSE.toString(),
                         HttpEndpointRequestMetric.DIMENSION_STRATEGY,
                         strategy.toString()),
-                latencyMs, // raw latency value
-                Unit.MILLISECONDS);
+                latencyMs,
+                MetricUnit.MILLISECONDS);
     }
 
     @ExcludeClassFromGeneratedCoverageReport

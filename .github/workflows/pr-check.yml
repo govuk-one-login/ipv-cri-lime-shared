@@ -5,6 +5,15 @@ on:
     branches: [ 'main' ]
 
 jobs:
+
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pre-commit checks
+        uses: govuk-one-login/github-actions/code-quality/run-pre-commit@3b0015c58dd0e19e1572fda59dda4184df387d1e
+        with:
+          all-files: true
+
   validate:
     runs-on: ubuntu-latest
     permissions:
@@ -13,6 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: JDK setup
         uses: actions/setup-java@v5
@@ -21,12 +32,17 @@ jobs:
           distribution: 'corretto'
 
       - name: Gradle setup
-        uses: gradle/actions/setup-gradle@v5
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c
         with:
           cache-read-only: false
 
       - name: Checks and tests
-        run: ./gradlew spotlessCheck unitTestCodeCoverageReport --continue
+        run: ./gradlew spotlessCheck unitTestCodeCoverageReport
+
+      - name: Sonar analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonar --info
 
       - name: Upload test report
         if: failure()

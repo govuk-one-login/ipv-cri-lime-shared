@@ -4,11 +4,11 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.account.ipv.cri.lime.limeade.util.http.HTTPReply;
 import uk.gov.account.ipv.cri.lime.limeade.util.http.HTTPReplyHelper;
-import uk.gov.account.ipv.cri.lime.limeade.util.metrics.MetricsProbe;
+import uk.gov.account.ipv.cri.lime.limeade.util.metrics.metricsprobe.MetricsProbe;
 import uk.gov.account.ipv.cri.lime.limeade.util.timing.SleepHelper;
 import uk.gov.account.ipv.cri.lime.limeade.util.timing.StopWatch;
 
@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class ApacheCloseableHttpRetryer2 implements HttpRetryer2 {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApacheCloseableHttpRetryer2.class);
 
     private final String endpointName;
     private final StopWatch stopWatch = new StopWatch();

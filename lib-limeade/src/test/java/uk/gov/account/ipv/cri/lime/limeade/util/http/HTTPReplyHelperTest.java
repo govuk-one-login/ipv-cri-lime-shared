@@ -37,10 +37,10 @@ class HTTPReplyHelperTest {
 
         HTTPReply reply = HTTPReplyHelper.retrieveResponse(mockResponse, ENDPOINT_NAME);
 
-        assertEquals(expectedBodyContent, reply.responseBody);
-        assertEquals(expectedStatusCode, reply.statusCode);
-        assertNotNull(reply.responseHeaders.get(expectedTestHeaderKey));
-        assertEquals(expectedTestHeaderValue, reply.responseHeaders.get(expectedTestHeaderKey));
+        assertEquals(expectedBodyContent, reply.responseBody());
+        assertEquals(expectedStatusCode, reply.statusCode());
+        assertNotNull(reply.responseHeaders().get(expectedTestHeaderKey));
+        assertEquals(expectedTestHeaderValue, reply.responseHeaders().get(expectedTestHeaderKey));
     }
 
     @Test
@@ -54,8 +54,8 @@ class HTTPReplyHelperTest {
 
         HTTPReply reply = HTTPReplyHelper.retrieveResponse(mockResponse, ENDPOINT_NAME);
 
-        assertEquals(expectedBodyContent, reply.responseBody);
-        assertEquals(expectedStatusCode, reply.statusCode);
+        assertEquals(expectedBodyContent, reply.responseBody());
+        assertEquals(expectedStatusCode, reply.statusCode());
     }
 
     @Test

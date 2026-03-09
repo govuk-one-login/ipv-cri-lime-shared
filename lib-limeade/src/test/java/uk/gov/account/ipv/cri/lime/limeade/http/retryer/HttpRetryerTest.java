@@ -177,7 +177,7 @@ class HttpRetryerTest {
         CloseableHttpResponse nonRetryableCloseableHttpResponse =
                 HttpResponseFixtures.createHttpResponse(999, null, "", false);
 
-        // x2 returns fro the above
+        // x2 returns for the above
         when(mockHttpClient.execute(any(HttpPost.class)))
                 .thenReturn(initialRetryableCloseableHttpResponse)
                 .thenReturn(nonRetryableCloseableHttpResponse);
