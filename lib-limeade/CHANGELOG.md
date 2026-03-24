@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-03-24
+
+### Changed
+
+- Updated `AWS SDK` to 2.42.16
+- Updated `AWS PowerTools` to 2.10.0
+- Updated `CRI Common Library` to 8.3.3
+
+To address vulnerability in Jackson-core.
+
 ## [1.1.0] - 2026-03-10
 
 ### Added
