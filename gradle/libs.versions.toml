@@ -12,7 +12,7 @@ aspect_jrt = "1.9.24"
 aws_sdk = "2.42.16"
 aws_powertools = "2.10.0"
 cri_common_lib = "8.3.3"
-opentelemetry_bom_alpha = "2.20.1-alpha"
+opentelemetry_bom_alpha = "2.26.1-alpha"
 
 # test versions
 junit = "6.0.0"
