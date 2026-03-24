@@ -15,7 +15,7 @@ cri_common_lib = "8.3.3"
 opentelemetry_bom_alpha = "2.20.1-alpha"
 
 # test versions
-junit = "6.0.0"
+junit = "6.0.3"
 mockito = "5.20.0"
 webcompere = "2.1.8"
 
