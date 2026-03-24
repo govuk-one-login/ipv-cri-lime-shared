@@ -16,7 +16,7 @@ opentelemetry_bom_alpha = "2.20.1-alpha"
 
 # test versions
 junit = "6.0.0"
-mockito = "5.20.0"
+mockito = "5.23.0"
 webcompere = "2.1.8"
 
 [libraries]
