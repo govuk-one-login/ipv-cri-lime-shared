@@ -8,7 +8,7 @@ sonarqube = "7.2.3.7755"
 # library versions
 apache_httpclient = "4.5.14"
 apache_httpcore = "4.4.16"
-aspect_jrt = "1.9.24"
+aspect_jrt = "1.9.25.1"
 aws_sdk = "2.42.16"
 aws_powertools = "2.10.0"
 cri_common_lib = "8.3.3"
