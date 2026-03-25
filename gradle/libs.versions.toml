@@ -11,7 +11,7 @@ apache_httpcore = "4.4.16"
 aspect_jrt = "1.9.24"
 aws_sdk = "2.42.16"
 aws_powertools = "2.10.0"
-cri_common_lib = "8.3.3"
+cri_common_lib = "8.3.4"
 opentelemetry_bom_alpha = "2.20.1-alpha"
 
 # test versions
