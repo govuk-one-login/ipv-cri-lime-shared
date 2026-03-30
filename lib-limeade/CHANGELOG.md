@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-04-01
+
+### Changed
+
+- Add MTLS Package with KeyCertHelper, Thumbprints
+  - KeyCertHelper — utility class for decoding base64-encoded X.509 certificates and PKCS8 RSA private keys, plus generating SHA-1/SHA-256 certificate thumbprints
+  - Thumbprints — simple record holding sha1Thumbprint and sha256Thumbprint
+  - Enhanced CloseableHttpClientFactory:
+    - Added generateMTLSHttpClient(...) — builds an Apache CloseableHttpClient configured with mutual TLS using a client cert/key pair and a trust store (root + intermediate certs)
+    - Internally creates JKS keystores and trust stores, protected by a random runtime password
+    - Removed the @ExcludeClassFromGeneratedCoverageReport annotation from the class (now has test coverage)
+
 ## [1.1.1] - 2026-03-24
 
 ### Changed
