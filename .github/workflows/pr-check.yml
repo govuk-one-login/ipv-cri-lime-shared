@@ -40,6 +40,7 @@ jobs:
         run: ./gradlew spotlessCheck unitTestCodeCoverageReport
 
       - name: Sonar analysis
+        if: github.actor != 'dependabot[bot]'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonar --info
