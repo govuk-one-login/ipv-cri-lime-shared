@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-04-02
+
+### Changed
+
+- Updated `AWS SDK` to 2.42.26
+- Updated `ApectJ` to 1.9.25.1
+- Updated `CRI Common Library` to 8.3.4
+
 ## [1.1.1] - 2026-03-24
 
 ### Changed

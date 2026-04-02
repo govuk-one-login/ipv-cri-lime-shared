@@ -2,21 +2,21 @@
 # plugin versions
 googleJavaFormat = "1.19.2"
 maven_publish = "0.36.0"
-spotless = "8.0.0"
+spotless = "8.4.0"
 sonarqube = "7.2.3.7755"
 
 # library versions
 apache_httpclient = "4.5.14"
 apache_httpcore = "4.4.16"
-aspect_jrt = "1.9.24"
-aws_sdk = "2.42.16"
+aspect_jrt = "1.9.25.1"
+aws_sdk = "2.42.26"
 aws_powertools = "2.10.0"
-cri_common_lib = "8.3.3"
+cri_common_lib = "8.3.4"
 opentelemetry_bom_alpha = "2.20.1-alpha"
 
 # test versions
-junit = "6.0.0"
-mockito = "5.20.0"
+junit = "6.0.3"
+mockito = "5.23.0"
 webcompere = "2.1.8"
 
 [libraries]
