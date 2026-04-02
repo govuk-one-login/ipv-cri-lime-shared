@@ -11,7 +11,6 @@ apache_httpcore = "4.4.16"
 aspect_jrt = "1.9.25.1"
 aws_sdk = "2.42.26"
 aws_powertools = "2.10.0"
-cri_common_lib = "8.3.4"
 opentelemetry_bom_alpha = "2.20.1-alpha"
 
 # test versions
@@ -28,7 +27,6 @@ aws-sdk-bom = { module = "software.amazon.awssdk:bom", version.ref = "aws_sdk" }
 aws-sdk-core = { module = "software.amazon.awssdk:sdk-core" }
 aws-sdk-crt-client = { module = "software.amazon.awssdk:aws-crt-client" }
 aws-sdk-dynamodb = { module = "software.amazon.awssdk:dynamodb" }
-cri-common-lib = { module = "uk.gov.account:cri-common-lib", version.ref = "cri_common_lib" }
 lambda-powertools-metrics = { module = "software.amazon.lambda:powertools-metrics", version.ref = "aws_powertools" }
 opentelemetry-bom-alpha= { module = "io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom-alpha", version.ref = "opentelemetry_bom_alpha" }
 opentelemetry-aws-sdk= { module = "io.opentelemetry.instrumentation:opentelemetry-aws-sdk-2.2" }

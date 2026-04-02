@@ -5,6 +5,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.account.ipv.cri.lime.limeade.annotation.ExcludeConstructorFromGeneratedCoverageReport;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public final class HTTPReplyHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HTTPReplyHelper.class);
 
+    @ExcludeConstructorFromGeneratedCoverageReport
     private HTTPReplyHelper() {
         throw new UnsupportedOperationException(
                 "This is a utility class and cannot be instantiated");

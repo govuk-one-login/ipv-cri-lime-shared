@@ -22,24 +22,28 @@ public final class HTTPConnectionKeepAliveStrategyFactory {
 
     // See https://hc.apache.org/httpcomponents-client-4.5.x/current/tutorial/html/connmgmt.html
     public static ConnectionKeepAliveStrategy createHTTPConnectionKeepAliveStrategy(
-            long keepAliveSeconds, boolean useRemoteHeaderValue) {
+            long defaultKeepAliveSeconds, boolean useRemoteHeaderValue) {
 
         return (response, context) -> {
-            long requestedKeepAlive = keepAliveSeconds;
+            long requestedKeepAliveSeconds = defaultKeepAliveSeconds;
 
             if (useRemoteHeaderValue) {
 
                 // Will used the remote value if present or fallback to keepAliveSeconds
-                requestedKeepAlive =
-                        retrieveRemoteHeaderKeepAliveHeaderIfPresent(keepAliveSeconds, response);
+                requestedKeepAliveSeconds =
+                        retrieveRemoteHeaderKeepAliveHeaderIfPresent(
+                                defaultKeepAliveSeconds, response);
             }
 
             // Use our requestedKeepAlive if sensible, else use a default
-            long keepAliveMS = requestedKeepAlive > 0 ? (requestedKeepAlive * 1000) : (30 * 1000);
+            long keepAliveMillis =
+                    requestedKeepAliveSeconds > 0
+                            ? (requestedKeepAliveSeconds * 1000)
+                            : (defaultKeepAliveSeconds * 1000);
 
-            LOGGER.info("Using Keep-Alive of {}ms", keepAliveMS);
+            LOGGER.info("Using Keep-Alive of {}ms", keepAliveMillis);
 
-            return keepAliveMS;
+            return keepAliveMillis;
         };
     }
 
