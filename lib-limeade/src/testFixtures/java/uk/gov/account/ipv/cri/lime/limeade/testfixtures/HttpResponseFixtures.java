@@ -289,7 +289,7 @@ public class HttpResponseFixtures {
 
         for (int h = 0; h < numHeaders; h++) {
 
-            String key = keys.get(0);
+            String key = keys.get(h);
             String value = headerMap.get(key);
 
             headers[h] = new BasicHeader(key, value);

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-02
+
+### Removed
+
+- `limeade.service.http.retryer`
+- `CRI Common Library`
+
+### Fixed
+
+- `HttpResonseFixtures`
+  - `createHttpResponse` now correctly evaluates all provided headers in the headerMap. This fixes an issue where only the
+    first header would be included in the response fixture
+
 ## [1.1.2] - 2026-04-02
 
 ### Changed
