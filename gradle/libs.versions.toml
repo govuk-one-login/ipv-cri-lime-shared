@@ -11,7 +11,7 @@ apache_httpcore = "4.4.16"
 aspect_jrt = "1.9.25.1"
 aws_sdk = "2.42.26"
 aws_powertools = "2.10.0"
-opentelemetry_bom_alpha = "2.20.1-alpha"
+opentelemetry_bom_alpha = "2.26.1-alpha"
 
 # test versions
 junit = "6.0.3"
