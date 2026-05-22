@@ -25,10 +25,8 @@ afterEvaluate {
 
 dependencies {
 	implementation platform(libs.aws.sdk.bom)
-	implementation platform(libs.opentelemetry.bom.alpha)
 	implementation libs.aspectjrt
 	implementation libs.lambda.powertools.metrics
-	implementation libs.opentelemetry.aws.sdk
 	implementation libs.bundles.aws.sdk.dynamodb
 	implementation libs.bundles.apache.http
 
