@@ -13,7 +13,7 @@ lib-limeade is a shared utility library for Java based Lime CRIs. It provides:
 
 #### Common AWS integrations
 
-- DynamoDbClientFactory, singleton DynamoDB client with OpenTelemetry tracing
+- DynamoDbClientFactory, singleton DynamoDB client with configurable execution interceptors (e.g OpenTelemetry)
 - AWSSDKHttpClientConfig, standardised AWS SDK config (region, credentials, CRT HTTP client)
 - LoggingSupport, populates SLF4J MDC with Lambda environment variables
 
