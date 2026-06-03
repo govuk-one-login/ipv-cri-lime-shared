@@ -4,7 +4,7 @@ googleJavaFormat = "1.19.2"
 greclipse = "4.32"
 maven_publish = "0.36.0"
 spotless = "8.4.0"
-sonarqube = "7.3.0.8198"
+sonarqube = "7.3.1.8318"
 
 # library versions
 apache_httpclient = "4.5.14"
