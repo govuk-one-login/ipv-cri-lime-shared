@@ -3,7 +3,7 @@
 googleJavaFormat = "1.19.2"
 greclipse = "4.32"
 maven_publish = "0.36.0"
-spotless = "8.4.0"
+spotless = "8.7.0"
 sonarqube = "7.3.0.8198"
 
 # library versions
