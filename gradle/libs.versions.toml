@@ -14,7 +14,7 @@ aws_sdk = "2.42.26"
 aws_powertools = "2.10.0"
 
 # test versions
-junit = "6.0.3"
+junit = "6.1.1"
 mockito = "5.23.0"
 webcompere = "2.1.8"
 
