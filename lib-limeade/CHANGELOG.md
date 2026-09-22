@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.3] - 2026-09-21
+
+### Changed
+
+- Updated `Sonarqube` to 7.5.0.8588
+
 ## [1.2.2] - 2026-05-22
 
 - Remove OpenTelemetry dependency; replace with generic ExecutionInterceptor registration API
