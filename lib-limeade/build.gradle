@@ -25,6 +25,7 @@ afterEvaluate {
 
 dependencies {
 	implementation platform(libs.aws.sdk.bom)
+	implementation platform(libs.jackson.bom)
 	implementation libs.aspectjrt
 	implementation libs.lambda.powertools.metrics
 	implementation libs.bundles.aws.sdk.dynamodb
@@ -34,6 +35,7 @@ dependencies {
 
 	testFixturesImplementation platform(libs.junit.bom)
 	testFixturesImplementation platform(libs.mockito.bom)
+	testFixturesImplementation platform(libs.jackson.bom)
 	testFixturesImplementation libs.bundles.junit
 	testFixturesImplementation libs.bundles.mockito
 	testFixturesImplementation libs.bundles.apache.http

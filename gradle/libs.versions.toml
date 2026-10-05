@@ -12,6 +12,7 @@ apache_httpcore = "4.4.16"
 aspect_jrt = "1.9.25.1"
 aws_sdk = "2.55.2"
 aws_powertools = "2.10.0"
+jackson = "2.21.7"
 
 # test versions
 junit = "6.0.3"
@@ -27,6 +28,7 @@ aws-sdk-bom = { module = "software.amazon.awssdk:bom", version.ref = "aws_sdk" }
 aws-sdk-core = { module = "software.amazon.awssdk:sdk-core" }
 aws-sdk-crt-client = { module = "software.amazon.awssdk:aws-crt-client" }
 aws-sdk-dynamodb = { module = "software.amazon.awssdk:dynamodb" }
+jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jackson" }
 lambda-powertools-metrics = { module = "software.amazon.lambda:powertools-metrics", version.ref = "aws_powertools" }
 
 # test libs
