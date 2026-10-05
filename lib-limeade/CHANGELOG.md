@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.4] - 2026-10-05
+
+### Changed
+
+- Updated `AWS SDK` to 2.55.2
+- Manually resolve our own `Jackson` BOM dependency to fix a vulnerable version coming in transitively from
+  `AWS PowerTools`.
+
 ## [1.2.3] - 2026-09-21
 
 ### Changed
@@ -33,8 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `HttpResonseFixtures`
-  - `createHttpResponse` now correctly evaluates all provided headers in the headerMap. This fixes an issue where only the
-    first header would be included in the response fixture
+  - `createHttpResponse` now correctly evaluates all provided headers in the headerMap. This fixes an issue where only
+    the first header would be included in the response fixture
 
 ## [1.1.2] - 2026-04-02
 
