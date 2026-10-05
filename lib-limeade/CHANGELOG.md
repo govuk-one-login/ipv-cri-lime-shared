@@ -41,9 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `HttpResonseFixtures`
-    - `createHttpResponse` now correctly evaluates all provided headers in the headerMap. This fixes an issue where only
-      the
-      first header would be included in the response fixture
+  - `createHttpResponse` now correctly evaluates all provided headers in the headerMap. This fixes an issue where only
+    the first header would be included in the response fixture
 
 ## [1.1.2] - 2026-04-02
 
