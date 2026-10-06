@@ -12,7 +12,7 @@ apache_httpcore = "4.4.16"
 aspect_jrt = "1.9.25.1"
 aws_sdk = "2.55.2"
 aws_powertools = "2.10.0"
-jackson = "2.21.7"
+jackson = "2.22.3"
 
 # test versions
 junit = "6.0.3"
